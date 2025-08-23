@@ -1,4 +1,5 @@
-// Mock data service to replace Board Game Atlas API
+// Mock data service for board game information
+// Provides self-contained game data without external API dependencies
 import { ThumbGame } from "customTypes";
 
 export interface MockGame extends ThumbGame {

@@ -48,7 +48,6 @@ services:
       CONNECTION_STRING: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-toptable_games}
       SESSION_SECRET: ${SESSION_SECRET}
       REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
-      VITE_CLIENT_ID: ${VITE_CLIENT_ID}
     ports:
       - "80:4050"
       - "443:4050"
