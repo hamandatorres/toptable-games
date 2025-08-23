@@ -17,9 +17,9 @@
 	padding: 15px;
 	border: 1px solid $text-color;
 	border-radius: 2px;
-	backdrop-filter: blur(3px);
 	-webkit-backdrop-filter: blur(3px);
 	-moz-backdrop-filter: blur(3px);
+	backdrop-filter: blur(3px);
 
 	h1 {
 		font-size: 3rem;

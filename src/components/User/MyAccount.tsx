@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios, { AxiosResponse } from "axios";
 import { RootState } from "../../redux/store";
-import { RouteComponentProps } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../StyledComponents/Button";
 import { User } from "customTypes";
 import { toast, ToastContainer } from "react-toastify";
 
-const MyAccount: React.FC<RouteComponentProps> = (
-	props: RouteComponentProps
-) => {
+const MyAccount: React.FC = () => {
 	const user = useSelector((state: RootState) => state.userReducer);
 
 	const [isEditingUsername, setIsEditingUsername] = useState<boolean>(false);
@@ -26,18 +24,15 @@ const MyAccount: React.FC<RouteComponentProps> = (
 	const [lastName, setLastName] = useState<string>(user.last_name);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-	const captureCurrentUser = useCallback((): void => {
+	useEffect((): void => {
 		setUsername(user.username);
 		setEmail(user.email);
 		setPassword("password");
 		setFirstName(user.first_name);
 		setLastName(user.last_name);
 	}, [user.username, user.email, user.first_name, user.last_name]);
-
-	useEffect((): void => {
-		captureCurrentUser();
-	}, [captureCurrentUser]);
 
 	const toggleEditUsername = (): void => {
 		setIsEditingUsername(!isEditingUsername);
@@ -65,6 +60,15 @@ const MyAccount: React.FC<RouteComponentProps> = (
 		setIsEditingPassword(false);
 		setIsEditingFirstName(false);
 		setIsEditingLastName(false);
+	};
+
+	const cancelChanges = (): void => {
+		setUsername(user.username);
+		setEmail(user.email);
+		setPassword("password");
+		setFirstName(user.first_name);
+		setLastName(user.last_name);
+		setEditing();
 	};
 
 	const saveChanges = (param: string): void => {
@@ -115,17 +119,9 @@ const MyAccount: React.FC<RouteComponentProps> = (
 		axios
 			.delete("/api/user/delete")
 			.then((): void => {
-				props.history.push("/");
+				navigate("/");
 			})
 			.catch((err) => console.log(err));
-	};
-
-	const cancelChanges = (): void => {
-		setUsername(user.username);
-		setEmail(user.email);
-		setPassword(password);
-		setFirstName(user.first_name);
-		setLastName(user.last_name);
 	};
 
 	return (
@@ -146,6 +142,7 @@ const MyAccount: React.FC<RouteComponentProps> = (
 					>
 						<p>username:</p>
 						<input
+							placeholder="Enter your username"
 							value={username}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
 								setUsername(e.target.value)
@@ -181,6 +178,7 @@ const MyAccount: React.FC<RouteComponentProps> = (
 					>
 						<p>email:</p>
 						<input
+							placeholder="Enter your email"
 							value={email}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
 								setEmail(e.target.value)
@@ -217,6 +215,7 @@ const MyAccount: React.FC<RouteComponentProps> = (
 						<p>password:</p>
 						<input
 							type="password"
+							placeholder="Enter your password"
 							value={password}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
 								setPassword(e.target.value)
@@ -252,6 +251,7 @@ const MyAccount: React.FC<RouteComponentProps> = (
 					>
 						<p>first name:</p>
 						<input
+							placeholder="Enter your first name"
 							value={firstName}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
 								setFirstName(e.target.value)
@@ -287,6 +287,7 @@ const MyAccount: React.FC<RouteComponentProps> = (
 					>
 						<p>last name:</p>
 						<input
+							placeholder="Enter your last name"
 							value={lastName}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
 								setLastName(e.target.value)

@@ -2,12 +2,13 @@ import axios from "axios";
 import { User } from "customTypes";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
+import type { AppDispatch } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import { getUserGames } from "../../redux/userGameReducer";
 import Button from "../StyledComponents/Button";
 
-const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
+const Login: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
 	const [firstName, setFirstName] = useState<string>("");
 	const [lastName, setLastName] = useState<string>("");
@@ -19,8 +20,8 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 	const [resetEmail, setResetEmail] = useState("");
 
 	const [isLogin, setIsLogin] = useState<boolean>(true);
-
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
 
 	const toggleLogin = (): void => {
 		setIsLogin(!isLogin);
@@ -41,8 +42,7 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 				setFirstName("");
 				setLastName("");
 				setEmail("");
-				setPassword("");
-				props.history.push("/");
+				navigate("/");
 			})
 			.catch((err) => {
 				if (err.response.data === "email") {
@@ -74,7 +74,8 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 				setLoginPassword("");
 				dispatch({ type: "UPDATE_USER", payload: user });
 				dispatch(getUserGames());
-				props.history.push("/");
+				dispatch(getUserGames());
+				navigate("/");
 			})
 			.catch((err) => {
 				if (err.response.data === "userCreds") {

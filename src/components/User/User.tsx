@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import ShelfItem from "./ShelfItem";
 import LeaderBoard from "../Header/LeaderBoard";
-import { RootState } from "../../redux/store";
+import { RootState, AppDispatch } from "../../redux/store";
 import axios from "axios";
 import { UserGame } from "../../redux/userGameReducer";
 import { getUserGames } from "../../redux/userGameReducer";
@@ -17,7 +17,7 @@ const User: React.FC = () => {
 	);
 	const userID = useSelector((state: RootState) => state.userReducer.user_id);
 
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const getPlayerStats = useCallback(() => {
 		axios.get(`/api/player/playcount/${userID}`).then((res) => {

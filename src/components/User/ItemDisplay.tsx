@@ -8,12 +8,12 @@ import HTMLReactParser from "html-react-parser";
 import mechCatProcessor from "../mechCatProccessor";
 import Rating from "../StyledComponents/Rating";
 import { getUserGames, UserGame } from "../../redux/userGameReducer";
-import { RouteComponentProps } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../redux/store";
 
-const ItemDisplay: React.FC<GameDispProps & RouteComponentProps> = (
-	props: GameDispProps & RouteComponentProps
-): JSX.Element => {
-	const [gameID] = useState(props.match.params.id);
+const ItemDisplay: React.FC<GameDispProps> = () => {
+	const { id: gameID } = useParams<{ id: string }>();
+	const navigate = useNavigate();
 	const [yearPublished, setYearPublished] = useState(0);
 	const [minPlayers, setMinPlayers] = useState(0);
 	const [maxPlayer, setMaxPlayers] = useState(0);
@@ -41,7 +41,7 @@ const ItemDisplay: React.FC<GameDispProps & RouteComponentProps> = (
 		(state: RootState) => state.meccatReducer.category
 	);
 
-	const dispatch = useDispatch();
+	const dispatch: AppDispatch = useDispatch();
 
 	useEffect((): void => {
 		if (mechanicsLib && categoriesLib) {
@@ -108,11 +108,10 @@ const ItemDisplay: React.FC<GameDispProps & RouteComponentProps> = (
 			.then((res) => setPlayCount(res.data.play_count))
 			.catch((err) => console.log(err));
 	};
-
 	const removeGame = () => {
 		axios.delete(`/api/usergame/${gameID}`).then(() => {
 			dispatch(getUserGames());
-			props.history.push("/user");
+			navigate("/user");
 		});
 	};
 

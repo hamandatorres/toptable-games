@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../redux/store";
+import { RootState, AppDispatch } from "../../redux/store";
 import { GameDispProps } from "customTypes";
 import HTMLReactParser from "html-react-parser";
 import Reviews from "./Reviews";
@@ -43,7 +43,7 @@ const GameDisplay: React.FC<GameDispProps> = (props: GameDispProps) => {
 		(state: RootState) => state.meccatReducer.rating
 	);
 
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	// Define callback functions before useEffect calls
 	const getGameDetails = useCallback(async (): Promise<void> => {
