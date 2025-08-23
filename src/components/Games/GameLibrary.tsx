@@ -16,7 +16,18 @@ const GameLibrary: React.FC = () => {
 
 	const rating = useSelector((state: RootState) => state.meccatReducer.rating);
 
-	useEffect(() => mapGames(), [searchResults, rating]);
+	// Define callback functions first
+	const mapGames = useCallback(() => {
+		setMappedGames(
+			searchResults.map((elem: ThumbGame, id: number) => {
+				return (
+					<div key={id}>
+						<GameBox thumbGame={elem}></GameBox>
+					</div>
+				);
+			})
+		);
+	}, [searchResults]);
 
 	const associateRatings = useCallback(
 		(apiGames: ThumbGame[]) => {
@@ -31,6 +42,9 @@ const GameLibrary: React.FC = () => {
 		},
 		[rating]
 	);
+
+	// useEffect hooks
+	useEffect(() => mapGames(), [mapGames]);
 
 	const getAPIGames = async (
 		currentPage: number,
@@ -55,18 +69,6 @@ const GameLibrary: React.FC = () => {
       associateRatings(apiGames)
     });
 	};
-
-	const mapGames = useCallback(() => {
-		setMappedGames(
-			searchResults.map((elem: ThumbGame, id: number) => {
-				return (
-					<div key={id}>
-						<GameBox thumbGame={elem}></GameBox>
-					</div>
-				);
-			})
-		);
-	}, [searchResults]);
 
 	return (
 		<div id="gameLibrary">

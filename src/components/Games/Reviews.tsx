@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Review, ReviewProps } from 'customTypes';
 import Rating from '../StyledComponents/Rating';
@@ -7,7 +7,7 @@ const Reviews: React.FC<ReviewProps> = (props: ReviewProps) => {
   const [review, setReview] = useState([]);
   const game_id = props.game_id;
 
-  const getGameReview = (): void => {
+  const getGameReview = useCallback((): void => {
     axios
       .get(`/api/game/reviews/${game_id}`)
       .then((res) => {
@@ -15,11 +15,11 @@ const Reviews: React.FC<ReviewProps> = (props: ReviewProps) => {
         setReview(reviewsArray);
       })
       .catch((err) => console.log(err));
-  };
+  }, [game_id]);
 
   useEffect((): void => {
     getGameReview();
-  }, []);
+  }, [getGameReview]);
 
   const mappedReviews = review.map((elem: Review, id: number) => {
     if (elem.rating || elem.review) {

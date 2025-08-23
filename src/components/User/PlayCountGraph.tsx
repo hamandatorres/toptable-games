@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { useSelector } from 'react-redux';
 import { UserGame } from '../../redux/userGameReducer';
@@ -43,7 +43,7 @@ const PlayCountGraph: React.FC = () => {
     };
   };
 
-  const chartConfig: ChartConfiguration<'bar'> = {
+  const chartConfig: ChartConfiguration<'bar'> = useMemo(() => ({
     type: 'bar',
     data: {
       labels: userGamesLabels,
@@ -59,7 +59,7 @@ const PlayCountGraph: React.FC = () => {
         legend: {}
       }
     }
-  };
+  }), [userGamesLabels, userGamesPlays]);
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
@@ -68,7 +68,7 @@ const PlayCountGraph: React.FC = () => {
       const newChart = new Chart(chartContainer.current, chartConfig);
       setChartInstance(newChart);
     }
-  }, [chartContainer, userGamesLabels, userGamesPlays]);
+  }, [chartContainer, userGamesLabels, userGamesPlays, chartConfig, chartInstance]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ShelfItem from './ShelfItem';
 import LeaderBoard from '../Header/LeaderBoard';
@@ -17,16 +17,16 @@ const User: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  useEffect((): void => {
-    getPlayerStats();
-    dispatch(getUserGames());
-  }, [userID]);
-
-  const getPlayerStats = () => {
+  const getPlayerStats = useCallback(() => {
     axios.get(`/api/player/playcount/${userID}`).then((res) => {
       setPlayCount(res.data.sum);
     });
-  };
+  }, [userID]);
+
+  useEffect((): void => {
+    getPlayerStats();
+    dispatch(getUserGames());
+  }, [getPlayerStats, dispatch]);
 
   const mappedUserGames = userGames.map((elem: UserGame, id: number) => {
     return (

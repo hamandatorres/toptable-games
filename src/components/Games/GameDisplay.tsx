@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -45,39 +45,8 @@ const GameDisplay: React.FC<GameDispProps> = (props: GameDispProps) => {
 
 	const dispatch = useDispatch();
 
-	useEffect((): void => {
-		getGameDetails();
-	}, []);
-
-	useEffect(() => {
-		setRating();
-	}, [gameRatings]);
-
-	const setRating = () => {
-		let ratingFiltered = 0;
-		gameRatings.forEach(
-			(el) => (
-				el.game_id === id ? (ratingFiltered = el.average_rating) : -1, -1
-			)
-		);
-		setThisRating(ratingFiltered);
-	};
-
-	useEffect((): void => {
-		determineGameAdded();
-	}, [userGames]);
-
-	const determineGameAdded = () => {
-		const found = userGames.reduce(
-			(accum: number, el: UserGame) => (el.game_id === id ? ++accum : accum),
-			0
-		);
-		if (found) {
-			setInList(true);
-		}
-	};
-
-	const getGameDetails = async (): Promise<void> => {
+	// Define callback functions before useEffect calls
+	const getGameDetails = useCallback(async (): Promise<void> => {
 		await axios
 			.get(
 				`https://api.boardgameatlas.com/api/search?ids=${id}&fields=name,year_published,min_players,max_players,min_age,mechanics,categories,description,image_url&client_id=${CLIENT_ID}`
@@ -113,7 +82,40 @@ const GameDisplay: React.FC<GameDispProps> = (props: GameDispProps) => {
 				setMechanics(mechanicsProcessed);
 				setCategories(categoriesProcessed);
 			});
-	};
+	}, [id, mechanicsLib, categoriesLib]);
+
+	const setRating = useCallback(() => {
+		let ratingFiltered = 0;
+		gameRatings.forEach(
+			(el) => (
+				el.game_id === id ? (ratingFiltered = el.average_rating) : -1, -1
+			)
+		);
+		setThisRating(ratingFiltered);
+	}, [gameRatings, id]);
+
+	const determineGameAdded = useCallback(() => {
+		const found = userGames.reduce(
+			(accum: number, el: UserGame) => (el.game_id === id ? ++accum : accum),
+			0
+		);
+		if (found) {
+			setInList(true);
+		}
+	}, [userGames, id]);
+
+	// useEffect hooks
+	useEffect((): void => {
+		getGameDetails();
+	}, [getGameDetails]);
+
+	useEffect(() => {
+		setRating();
+	}, [setRating]);
+
+	useEffect((): void => {
+		determineGameAdded();
+	}, [determineGameAdded]);
 
 	const addRemoveGame = async (addRemove: string): Promise<void> => {
 		switch (addRemove) {

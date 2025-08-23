@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios, { AxiosResponse } from 'axios';
 import { RootState } from '../../redux/store';
@@ -25,17 +25,17 @@ const MyAccount: React.FC<RouteComponentProps> = (props: RouteComponentProps) =>
 
   const dispatch = useDispatch();
 
-  useEffect((): void => {
-    captureCurrentUser();
-  }, [user]);
-
-  const captureCurrentUser = (): void => {
+  const captureCurrentUser = useCallback((): void => {
     setUsername(user.username);
     setEmail(user.email);
     setPassword('password');
     setFirstName(user.first_name);
     setLastName(user.last_name);
-  };
+  }, [user.username, user.email, user.first_name, user.last_name]);
+
+  useEffect((): void => {
+    captureCurrentUser();
+  }, [captureCurrentUser]);
 
   const toggleEditUsername = (): void => {
     setIsEditingUsername(!isEditingUsername);
