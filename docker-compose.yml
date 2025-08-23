@@ -63,6 +63,19 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    develop:
+      watch:
+        - path: ./server
+          action: sync
+          target: /app/server
+          ignore:
+            - node_modules/
+            - "*.log"
+        - path: ./db
+          action: sync
+          target: /app/db
+        - path: ./package.json
+          action: rebuild
 
   # Frontend Development Server
   frontend:
@@ -87,6 +100,30 @@ services:
       - toptable-network
     depends_on:
       - backend
+    develop:
+      watch:
+        - path: ./src
+          action: sync
+          target: /app/src
+          ignore:
+            - "**/*.test.ts"
+            - "**/*.test.tsx"
+            - "**/*.spec.ts"
+            - "**/*.spec.tsx"
+        - path: ./public
+          action: sync
+          target: /app/public
+        - path: ./index.html
+          action: sync
+          target: /app/index.html
+        - path: ./vite.config.ts
+          action: sync
+          target: /app/vite.config.ts
+        - path: ./tsconfig.json
+          action: sync
+          target: /app/tsconfig.json
+        - path: ./package.json
+          action: rebuild
 
 volumes:
   postgres_data:
@@ -97,52 +134,3 @@ volumes:
 networks:
   toptable-network:
     driver: bridge
-
-# Docker Compose Watch Configuration
-# Use: docker compose watch
-watch:
-  # Backend watch configuration
-  - path: ./server
-    action: sync
-    target: /app/server
-    ignore:
-      - node_modules/
-      - "*.log"
-
-  - path: ./db
-    action: sync
-    target: /app/db
-
-  - path: ./package.json
-    action: rebuild
-    target: /app/package.json
-
-  # Frontend watch configuration
-  - path: ./src
-    action: sync
-    target: /app/src
-    ignore:
-      - "**/*.test.ts"
-      - "**/*.test.tsx"
-      - "**/*.spec.ts"
-      - "**/*.spec.tsx"
-
-  - path: ./public
-    action: sync
-    target: /app/public
-
-  - path: ./index.html
-    action: sync
-    target: /app/index.html
-
-  - path: ./vite.config.ts
-    action: sync
-    target: /app/vite.config.ts
-
-  - path: ./tsconfig.json
-    action: sync
-    target: /app/tsconfig.json
-
-  - path: ./package.json
-    action: rebuild
-    target: /app/package.json
