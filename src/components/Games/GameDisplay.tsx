@@ -182,7 +182,7 @@ const GameDisplay: React.FC = () => {
 					</section>
 				</div>
 			</main>
-			<Reviews game_id={id} />
+			{id && <Reviews game_id={id} />}
 		</div>
 	);
 };

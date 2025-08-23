@@ -146,7 +146,9 @@ describe("SearchBar Component", () => {
 		const nextPageArrow = svgElements[1]; // Second SVG is next page
 
 		// Click next page
-		await user.click(nextPageArrow);
+		if (nextPageArrow) {
+			await user.click(nextPageArrow);
+		}
 
 		// Check that page indicator updates to page 2
 		expect(screen.getByText("2")).toBeInTheDocument();
@@ -161,7 +163,9 @@ describe("SearchBar Component", () => {
 		const prevPageArrow = svgElements[0]; // First SVG is previous page
 
 		// Try to go to previous page when already on page 1
-		await user.click(prevPageArrow);
+		if (prevPageArrow) {
+			await user.click(prevPageArrow);
+		}
 
 		// Should still be on page 1
 		expect(screen.getByText("1")).toBeInTheDocument();

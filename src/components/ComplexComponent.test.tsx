@@ -4,8 +4,19 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { renderWithProviders } from "../test/test-utils";
 
+// Define props interface for the complex component
+interface ComplexComponentProps {
+	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+	onCancel: () => void;
+	isLoading?: boolean;
+}
+
 // Mock a complex component for demonstration
-const ComplexComponent = ({ onSubmit, onCancel, isLoading = false }) => {
+const ComplexComponent: React.FC<ComplexComponentProps> = ({
+	onSubmit,
+	onCancel,
+	isLoading = false,
+}) => {
 	return (
 		<form onSubmit={onSubmit}>
 			<input

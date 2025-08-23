@@ -15,12 +15,22 @@
 	overflow: scroll;
 	white-space: break-spaces;
 	height: fit-content;
+
+	/* Hide scrollbars for all browsers */
+	/* Internet Explorer and Edge Legacy */
 	-ms-overflow-style: none;
-	scrollbar-width: none;
+
+	/* Modern browsers that support scrollbar-width */
+	@supports (scrollbar-width: none) {
+		scrollbar-width: none;
+	}
 }
 
+/* WebKit browsers (Chrome, Safari, Edge Chromium) - Primary method for these browsers */
 .reviewBox::-webkit-scrollbar {
 	display: none;
+	width: 0;
+	background: transparent;
 }
 
 .usernameHeader {

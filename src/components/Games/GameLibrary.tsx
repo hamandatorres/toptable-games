@@ -32,8 +32,8 @@ const GameLibrary: React.FC = () => {
 			const output = [...apiGames]; // Create a copy to avoid mutation
 			output.forEach((game: ThumbGame, ind: number) => {
 				const gameRating = rating.find((r) => r.game_id === game.id);
-				if (gameRating) {
-					output[ind].avgRating = gameRating.average_rating;
+				if (gameRating && output[ind]) {
+					output[ind]!.avgRating = gameRating.average_rating;
 				}
 			});
 			setSearchResults(output);

@@ -21,16 +21,16 @@ const LeaderBoard: React.FC = () => {
 
 	useEffect((): void => {
 		if (leaders.length > 0) {
-			setFirstUsername(leaders[0]?.username);
-			setFirstTotal(leaders[0]?.total);
-			setSecondUsername(leaders[1]?.username);
-			setSecondTotal(leaders[1]?.total);
-			setThirdUsername(leaders[2]?.username);
-			setThirdTotal(leaders[2]?.total);
-			setFourthUsername(leaders[3]?.username);
-			setFourthTotal(leaders[3]?.total);
-			setFifthUsername(leaders[4]?.username);
-			setFifthTotal(leaders[4]?.total);
+			setFirstUsername(leaders[0]?.username || "");
+			setFirstTotal(leaders[0]?.total || "");
+			setSecondUsername(leaders[1]?.username || "");
+			setSecondTotal(leaders[1]?.total || "");
+			setThirdUsername(leaders[2]?.username || "");
+			setThirdTotal(leaders[2]?.total || "");
+			setFourthUsername(leaders[3]?.username || "");
+			setFourthTotal(leaders[3]?.total || "");
+			setFifthUsername(leaders[4]?.username || "");
+			setFifthTotal(leaders[4]?.total || "");
 		}
 	}, [leaders]);
 

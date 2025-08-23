@@ -60,7 +60,7 @@ const ItemDisplay: React.FC = () => {
 		const userGame: UserGame[] = userGames.filter((el: UserGame) => {
 			return el.game_id === gameID ? true : false;
 		});
-		if (userGame.length === 1) {
+		if (userGame.length === 1 && userGame[0]) {
 			const {
 				name,
 				play_count,
@@ -132,7 +132,7 @@ const ItemDisplay: React.FC = () => {
 					})
 					.catch((err: AxiosError) => console.log(err));
 			default:
-				break;
+				return Promise.resolve();
 		}
 	};
 	const postReview = () => {
