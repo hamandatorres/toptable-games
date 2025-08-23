@@ -18,16 +18,19 @@ const GameLibrary: React.FC = () => {
 
 	useEffect(() => mapGames(), [searchResults, rating]);
 
-	const associateRatings = useCallback((apiGames: ThumbGame[]) => {
-		const output = [...apiGames]; // Create a copy to avoid mutation
-		output.forEach((game: ThumbGame, ind: number) => {
-			const gameRating = rating.find(r => r.game_id === game.id);
-			if (gameRating) {
-				output[ind].avgRating = gameRating.average_rating;
-			}
-		});
-		setSearchResults(output);
-	}, [rating]);
+	const associateRatings = useCallback(
+		(apiGames: ThumbGame[]) => {
+			const output = [...apiGames]; // Create a copy to avoid mutation
+			output.forEach((game: ThumbGame, ind: number) => {
+				const gameRating = rating.find((r) => r.game_id === game.id);
+				if (gameRating) {
+					output[ind].avgRating = gameRating.average_rating;
+				}
+			});
+			setSearchResults(output);
+		},
+		[rating]
+	);
 
 	const getAPIGames = async (
 		currentPage: number,
