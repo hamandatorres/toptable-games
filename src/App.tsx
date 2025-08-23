@@ -19,6 +19,7 @@ import { fetchUserGames } from "./redux/userGameReducer";
 import { updateUser } from "./redux/userReducer";
 import { updateMec, updateCat, updateRatings } from "./redux/meccatReducer";
 import type { GameRatings } from "./redux/meccatReducer";
+import { MockGameService } from "./services/mockGameData";
 
 function App() {
 	const dispatch = useDispatch<AppDispatch>();
@@ -54,12 +55,8 @@ function App() {
 
 	const getMechanics = async () => {
 		try {
-			const res = await axios.get(
-				`https://api.boardgameatlas.com/api/game/mechanics?client_id=${
-					import.meta.env.VITE_CLIENT_ID
-				}`
-			);
-			const mechanicArr = res.data.mechanics;
+			const res = await MockGameService.getMechanics();
+			const mechanicArr = res.mechanics;
 			dispatch(updateMec(mechanicArr));
 		} catch (err) {
 			console.log(err);
@@ -68,12 +65,8 @@ function App() {
 
 	const getCatagories = async () => {
 		try {
-			const res = await axios.get(
-				`https://api.boardgameatlas.com/api/game/categories?client_id=${
-					import.meta.env.VITE_CLIENT_ID
-				}`
-			);
-			const categoryArr = res.data.categories;
+			const res = await MockGameService.getCategories();
+			const categoryArr = res.categories;
 			dispatch(updateCat(categoryArr));
 		} catch (err) {
 			console.log(err);

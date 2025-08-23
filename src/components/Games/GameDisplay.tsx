@@ -10,8 +10,7 @@ import Button from "../StyledComponents/Button";
 import { UserGame, getUserGames } from "../../redux/userGameReducer";
 import mechCatProcessor from "../mechCatProccessor";
 import { GameRatings } from "../../redux/meccatReducer";
-
-const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+import { MockGameService } from "../../services/mockGameData";
 
 const GameDisplay: React.FC = () => {
 	const [nameState, setName] = useState("");
@@ -47,41 +46,33 @@ const GameDisplay: React.FC = () => {
 
 	// Define callback functions before useEffect calls
 	const getGameDetails = useCallback(async (): Promise<void> => {
-		await axios
-			.get(
-				`https://api.boardgameatlas.com/api/search?ids=${id}&fields=name,year_published,min_players,max_players,min_age,mechanics,categories,description,image_url&client_id=${CLIENT_ID}`
-			)
-			.then((res) => {
-				const {
-					name,
-					year_published,
-					min_players,
-					max_players,
-					min_age,
-					image_url,
-					description,
-					mechanics,
-					categories,
-				} = res.data.games[0];
+		if (!id) return;
 
-				setName(name);
-				setYearPublisehd(year_published);
-				setMinPlayers(min_players);
-				setMaxPlayers(max_players);
-				setMinAge(min_age);
-				setImageUrl(image_url);
-				setDescription(description);
+		try {
+			const game = await MockGameService.getGameById(id);
+
+			if (game) {
+				setName(game.name);
+				setYearPublisehd(game.year_published?.toString() || "");
+				setMinPlayers(game.min_players?.toString() || "");
+				setMaxPlayers(game.max_players?.toString() || "");
+				setMinAge(game.min_age?.toString() || "");
+				setImageUrl(game.thumb_url);
+				setDescription(game.description || "No description available.");
 
 				const { mechanicsProcessed, categoriesProcessed } = mechCatProcessor(
-					mechanics,
-					categories,
+					game.mechanics || [],
+					game.categories || [],
 					mechanicsLib,
 					categoriesLib
 				);
 
 				setMechanics(mechanicsProcessed);
 				setCategories(categoriesProcessed);
-			});
+			}
+		} catch (error) {
+			console.error("Error fetching game details:", error);
+		}
 	}, [id, mechanicsLib, categoriesLib]);
 
 	const setRating = useCallback(() => {
