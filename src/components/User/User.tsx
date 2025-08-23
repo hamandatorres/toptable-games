@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from "../../redux/store";
 import axios from "axios";
 import { UserGame } from "../../redux/userGameReducer";
 import { getUserGames } from "../../redux/userGameReducer";
-import PlayCountGraph from "./PlayCountGraph";
+import LazyPlayCountGraph from "./LazyPlayCountGraph";
 
 const User: React.FC = () => {
 	const user = useSelector((state: RootState) => state.userReducer);
@@ -46,7 +46,7 @@ const User: React.FC = () => {
 						<h2>{user.username}</h2>
 						<h4>playcount: {playCount}</h4>
 					</div>
-					<PlayCountGraph />
+					<LazyPlayCountGraph />
 					<div className="userLeaderboard">
 						<LeaderBoard />
 					</div>

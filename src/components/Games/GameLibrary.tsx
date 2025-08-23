@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import Hero from "../Header/Hero";
 import SearchBar from "./SearchBar";
@@ -10,21 +10,16 @@ import { MockGameService } from "../../services/mockGameData";
 
 const GameLibrary: React.FC = () => {
 	const [searchResults, setSearchResults] = useState<ThumbGame[]>([]);
-	const [mappedGames, setMappedGames] = useState<React.ReactElement[]>([]);
 
 	const rating = useSelector((state: RootState) => state.meccatReducer.rating);
 
-	// Define callback functions first
-	const mapGames = useCallback(() => {
-		setMappedGames(
-			searchResults.map((elem: ThumbGame, id: number) => {
-				return (
-					<div key={id}>
-						<GameBox thumbGame={elem}></GameBox>
-					</div>
-				);
-			})
-		);
+	// Memoize the game mapping to avoid unnecessary re-renders
+	const mappedGames = useMemo(() => {
+		return searchResults.map((elem: ThumbGame) => (
+			<div key={elem.id}>
+				<GameBox thumbGame={elem} />
+			</div>
+		));
 	}, [searchResults]);
 
 	const associateRatings = useCallback(
@@ -40,9 +35,6 @@ const GameLibrary: React.FC = () => {
 		},
 		[rating]
 	);
-
-	// useEffect hooks
-	useEffect(() => mapGames(), [mapGames]);
 
 	const getAPIGames = useCallback(
 		async (
