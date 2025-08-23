@@ -1,0 +1,36 @@
+# Ignore technical terms and project-specific words
+node_modules/
+dist/
+build/
+coverage/
+*.min.js
+*.bundle.js
+package-lock.json
+yarn.lock
+
+# File extensions to ignore
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# Configuration files
+.env*
+.git*
+.vscode/
+.docker*
+docker-compose*
+Dockerfile*
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

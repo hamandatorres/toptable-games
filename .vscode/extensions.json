@@ -1,0 +1,14 @@
+{
+	"recommendations": [
+		"ms-vscode.vscode-typescript-next",
+		"bradlc.vscode-tailwindcss",
+		"esbenp.prettier-vscode",
+		"ms-vscode.vscode-eslint",
+		"vitest.explorer",
+		"ms-vscode.test-adapter-converter"
+	],
+	"unwantedRecommendations": [
+		"streetsidesoftware.code-spell-checker",
+		"ms-vscode.vscode-spell-checker"
+	]
+}
