@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const cors = require("cors");
 const SQLSecurityMiddleware = require("../middleware/sqlSecurityMiddleware");
+const XSSProtectionMiddleware = require("../middleware/xssProtectionMiddleware");
 
 class SecurityConfig {
 	static configureSecurityMiddleware(app, config) {
@@ -75,13 +76,18 @@ class SecurityConfig {
 		app.use("/auth/register", authLimiter);
 		app.use("/auth/password-reset", authLimiter);
 
-		// 5. SQL injection prevention
+		// 5. XSS Protection
+		app.use(XSSProtectionMiddleware.sanitizeRequest);
+		app.use("/auth", XSSProtectionMiddleware.enhancedSecurityHeaders);
+		app.use("/api", XSSProtectionMiddleware.enhancedSecurityHeaders);
+
+		// 6. SQL injection prevention
 		app.use(SQLSecurityMiddleware.validateInput);
 		app.use("/auth", SQLSecurityMiddleware.validateUserInput);
 		app.use("/api/usergames", SQLSecurityMiddleware.validateUserInput);
 		app.use("/api/userinfo", SQLSecurityMiddleware.validateUserInput);
 
-		// 6. Request size limiting
+		// 7. Request size limiting
 		app.use(
 			express.json({
 				limit: "10mb",
@@ -95,7 +101,7 @@ class SecurityConfig {
 			})
 		);
 
-		// 7. Additional security headers
+		// 8. Additional security headers
 		app.use((req, res, next) => {
 			res.setHeader("X-Content-Type-Options", "nosniff");
 			res.setHeader("X-Frame-Options", "DENY");

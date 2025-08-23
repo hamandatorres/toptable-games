@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState, AppDispatch } from "../../redux/store";
-import HTMLReactParser from "html-react-parser";
+import XSSProtection from "../../utils/xssProtection";
 import Reviews from "./Reviews";
 import Rating from "../StyledComponents/Rating";
 import Button from "../StyledComponents/Button";
@@ -173,7 +173,7 @@ const GameDisplay: React.FC = () => {
 					</section>
 					<section className="game-info-column">
 						<article className="game-description">
-							{HTMLReactParser(descriptionState)}
+							<XSSProtection.SafeHTML html={descriptionState} />
 						</article>
 					</section>
 					<section className="game-info-row">

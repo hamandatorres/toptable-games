@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { OptionNoName } from "customTypes";
 import Button from "../StyledComponents/Button";
-import HTMLReactParser from "html-react-parser";
+import XSSProtection from "../../utils/xssProtection";
 import mechCatProcessor from "../mechCatProccessor";
 import Rating from "../StyledComponents/Rating";
 import { getUserGames, UserGame } from "../../redux/userGameReducer";
@@ -211,7 +211,7 @@ const ItemDisplay: React.FC = () => {
 					<h4>Minimum Age</h4> -{minAge}
 				</section>
 				<section className="game-info-container">
-					{HTMLReactParser(description)}
+					<XSSProtection.SafeHTML html={description} />
 				</section>
 				<section>
 					<h4>Mechanics</h4>
