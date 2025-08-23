@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useState, useEffect, SyntheticEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { GameDispProps, OptionNoName } from "customTypes";
+import { OptionNoName } from "customTypes";
 import Button from "../StyledComponents/Button";
 import HTMLReactParser from "html-react-parser";
 import mechCatProcessor from "../mechCatProccessor";
@@ -11,7 +11,7 @@ import { getUserGames, UserGame } from "../../redux/userGameReducer";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../redux/store";
 
-const ItemDisplay: React.FC<GameDispProps> = () => {
+const ItemDisplay: React.FC = () => {
 	const { id: gameID } = useParams<{ id: string }>();
 	const navigate = useNavigate();
 	const [yearPublished, setYearPublished] = useState(0);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { RootState, AppDispatch } from "../../redux/store";
-import { GameDispProps } from "customTypes";
 import HTMLReactParser from "html-react-parser";
 import Reviews from "./Reviews";
 import Rating from "../StyledComponents/Rating";
@@ -13,7 +13,7 @@ import { GameRatings } from "../../redux/meccatReducer";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 
-const GameDisplay: React.FC<GameDispProps> = (props: GameDispProps) => {
+const GameDisplay: React.FC = () => {
 	const [nameState, setName] = useState("");
 	const [yearPublishedState, setYearPublisehd] = useState("");
 	const [minPlayersState, setMinPlayers] = useState("");
@@ -26,7 +26,7 @@ const GameDisplay: React.FC<GameDispProps> = (props: GameDispProps) => {
 	const [inList, setInList] = useState(false);
 	const [thisRating, setThisRating] = useState(0);
 
-	const { id } = props.match.params;
+	const { id } = useParams<{ id: string }>();
 	const email = useSelector((state: RootState) => state.userReducer.email);
 	const userGames = useSelector(
 		(state: RootState) => state.userGameReducer.userGames

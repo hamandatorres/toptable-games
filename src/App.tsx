@@ -5,9 +5,16 @@ import axios from "axios";
 import "./scss/main.scss";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/Header/Header";
-// import routes from "./routes.jsx";
+import { Routes, Route } from "react-router-dom";
+import User from "./components/User/User";
+import GameLibrary from "./components/Games/GameLibrary";
+import Login from "./components/Header/Login";
+import GameDisplay from "./components/Games/GameDisplay";
+import MyAccount from "./components/User/MyAccount";
+import ItemDisplay from "./components/User/ItemDisplay";
+import ResetPassword from "./components/User/PasswordReset";
 import Footer from "./components/Header/footer";
-import type { User } from "./redux/userReducer";
+import type { User as UserType } from "./redux/userReducer";
 import { fetchUserGames } from "./redux/userGameReducer";
 import { updateUser } from "./redux/userReducer";
 import { updateMec, updateCat, updateRatings } from "./redux/meccatReducer";
@@ -36,7 +43,7 @@ function App() {
 
 	const getUser = async () => {
 		try {
-			const res = await axios.get<User>("/api/auth/user");
+			const res = await axios.get<UserType>("/api/auth/user");
 			const user = res.data;
 			dispatch(fetchUserGames());
 			dispatch(updateUser(user));
@@ -76,12 +83,16 @@ function App() {
 	return (
 		<div className="App">
 			<Header />
-			{/* Render the routes */}
-			{/* {routes} */}
-			<div>
-				<h1>Board Game Project</h1>
-				<p>Header and Footer components are working!</p>
-			</div>
+			<Routes>
+				<Route path="/" element={<GameLibrary />} />
+				<Route path="/auth" element={<Login />} />
+				<Route path="/user" element={<User />} />
+				<Route path="/game/:id" element={<GameDisplay />} />
+				<Route path="/game" element={<GameLibrary />} />
+				<Route path="/account" element={<MyAccount />} />
+				<Route path="/usergame/:id" element={<ItemDisplay />} />
+				<Route path="/reset/:token" element={<ResetPassword />} />
+			</Routes>
 			<Footer />
 		</div>
 	);

@@ -80,7 +80,29 @@ const GameLibrary: React.FC = () => {
 					</div>
 					<SearchBar getAPIGames={getAPIGames} />
 				</div>
-				<main id="searchResults"> {mappedGames}</main>
+				<main id="searchResults">
+					{mappedGames.length > 0 ? (
+						mappedGames
+					) : (
+						<div style={{ padding: "20px", textAlign: "center" }}>
+							<h2>Welcome to TopTable Games!</h2>
+							<p>
+								To see board games, please add your Board Game Atlas API key to
+								the .env file (VITE_CLIENT_ID)
+							</p>
+							<p>
+								You can get a free API key at:{" "}
+								<a
+									href="https://www.boardgameatlas.com/api/docs"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Board Game Atlas API
+								</a>
+							</p>
+						</div>
+					)}
+				</main>
 			</div>
 		</div>
 	);
