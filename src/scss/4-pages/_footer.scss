@@ -1,0 +1,75 @@
+@use "../1-helpers/variables" as *;
+
+.footer {
+	margin-top: 30px;
+	padding-top: 20px;
+	text-align: center;
+	background: $secondary-color;
+	min-width: 100vw;
+	width: 100vw;
+	flex: 0 0 160px;
+
+	h4 {
+		font-family: $font-heading;
+		margin-bottom: 10px;
+	}
+	p {
+		font-family: $font-main;
+		margin-bottom: 10px;
+	}
+	a {
+		cursor: pointer;
+		text-decoration: none;
+		color: $text-color;
+	}
+	a:hover {
+		color: $highlight-color;
+	}
+}
+
+.footerHexContainer {
+	margin: 20px 38px 0 0;
+
+	display: inline-block;
+	transition: 800ms ease-in-out;
+	cursor: pointer;
+}
+
+@mixin _hexagon {
+	width: 40px;
+	height: 22.5px;
+	background: transparent;
+	border: 1.75px solid $text-color;
+	border-radius: 1px;
+	position: absolute;
+	transition: 800ms ease-in-out;
+}
+
+.footerHexagon1 {
+	@include _hexagon();
+}
+
+.footerHexagon2 {
+	@include _hexagon();
+	transform: rotate(60deg);
+}
+
+.footerHexagon3 {
+	@include _hexagon();
+	transform: rotate(120deg);
+}
+
+.footerHexContainer:hover .footerHexagon1 {
+	transition: 800ms ease-in-out;
+	transform: rotate(180deg);
+}
+
+.footerHexContainer:hover .footerHexagon2 {
+	transition: 800ms ease-in-out;
+	transform: rotate(300deg);
+}
+
+.footerHexContainer:hover .footerHexagon3 {
+	transition: 800ms ease-in-out;
+	transform: rotate(600deg);
+}

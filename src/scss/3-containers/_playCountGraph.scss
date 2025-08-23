@@ -1,0 +1,12 @@
+@use "../1-helpers/variables" as *;
+
+canvas {
+	max-width: 100%;
+}
+
+@media (max-width: $bp-tablet) {
+	canvas {
+		width: 80vw;
+		margin: auto;
+	}
+}

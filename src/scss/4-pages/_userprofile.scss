@@ -1,0 +1,71 @@
+@use "../1-helpers" as *;
+
+.flexProfile {
+	min-height: 71vh;
+}
+.userProfile {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	padding: 20px 0 0 0;
+	h2 {
+		font-family: $font-heading;
+		font-size: 1.8rem;
+		color: $text-color;
+		padding-right: 10px;
+	}
+	h4 {
+		font-family: $font-main;
+		font-size: 1rem;
+		color: $text-color;
+		margin-bottom: 5px;
+	}
+	.userLeaderboard {
+		padding: 10px;
+	}
+}
+
+@media (min-width: $bp-mobile) {
+	.userProfile {
+		h2 {
+			font-size: 2.2rem;
+		}
+		h4 {
+			font-size: 1.2rem;
+		}
+	}
+}
+
+@media (min-width: $bp-tablet) {
+	.userProfile,
+	.sticky {
+		height: 650px;
+	}
+	.userProfile {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: center;
+		margin: 20px 20px 0 30px;
+		text-align: center;
+		@include border();
+		h2 {
+			padding: 10px;
+		}
+		h4 {
+			padding: 0 10px 10px 10px;
+		}
+		img {
+			margin-top: 30px;
+		}
+	}
+	.sticky {
+		position: -webkit-sticky;
+		position: sticky;
+		top: 20px;
+	}
+	.flexProfile {
+		display: flex;
+		flex-flow: row nowrap;
+	}
+}

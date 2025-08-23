@@ -1,0 +1,30 @@
+@use "../1-helpers/variables" as *;
+
+* {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+p,
+article,
+div,
+textarea {
+	font-family: $font-main;
+}
+
+.App {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	min-width: 100vw;
+}

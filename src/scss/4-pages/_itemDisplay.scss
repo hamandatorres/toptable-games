@@ -1,0 +1,62 @@
+@use "../1-helpers/mixins" as *;
+
+.playCountContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.removeButton {
+	margin-top: 15px;
+}
+.alreadyGame {
+	margin-bottom: 10px;
+}
+
+#counterBox {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 100px;
+	margin-top: 10px;
+}
+
+.input {
+	height: 65%;
+}
+.addRemPlay,
+.addRemRating {
+	height: 35px;
+	width: 35px;
+	padding: 0px;
+}
+
+#playCtNum {
+	font-size: 1.3rem;
+}
+
+#ratingReviewContainer {
+	@include border;
+	padding: 5px;
+	height: 150px;
+}
+
+#ratingChanger {
+	margin-bottom: 10px;
+}
+
+#review {
+	max-width: 700px;
+	width: 80vw;
+	font-weight: bold;
+	resize: none;
+	overflow: scroll;
+	outline: none;
+	border: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	background-color: white;
+}

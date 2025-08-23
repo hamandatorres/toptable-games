@@ -1,0 +1,92 @@
+@use "../1-helpers/variables" as *;
+
+.myAccount {
+	flex: 1 1 auto;
+	min-height: 69vh;
+}
+
+.myAccountContainer {
+	background: $base-color;
+	position: relative;
+	margin: 20px;
+	padding: 10px 15px 15px 15px;
+	display: flex;
+	flex-direction: column;
+	height: fit-content;
+	h2 {
+		font-family: $font-heading;
+		font-size: 2rem;
+		text-align: center;
+		margin-bottom: 10px;
+	}
+	p {
+		font-family: $font-main;
+		display: inline-block;
+		margin-bottom: 15px;
+		white-space: nowrap;
+	}
+	input {
+		width: 100%;
+		height: 0.8rem;
+		margin-left: 8px;
+		margin-right: 8px;
+		border: none;
+		border-bottom: 1px solid $text-color;
+		border-radius: 2px;
+		background: $base-color;
+	}
+	button {
+		padding: 4px 4px;
+		margin: 0 0 2px 5px;
+	}
+	section {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+	}
+	form {
+		display: flex;
+		align-items: baseline;
+	}
+	.deletebtn {
+		width: 50px;
+		margin-left: auto;
+	}
+	.confirmDelete {
+		margin: 20px 0 15px 0;
+		display: flex;
+		justify-content: space-between;
+	}
+	.confirmDeleteText {
+		white-space: break-spaces;
+		max-width: 150px;
+	}
+	.btnGroup {
+		min-width: 90px;
+		width: 90px;
+		margin-left: 10px;
+	}
+}
+
+@media (min-width: $bp-mobile) {
+	.myAccountContainer {
+		margin-left: 7vw;
+		margin-right: 7vw;
+		padding: 30px;
+		h2 {
+			margin-bottom: 20px;
+		}
+	}
+}
+
+@media (min-width: $bp-tablet) {
+	.myAccountContainer {
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 500px;
+		input {
+			margin-left: 25px;
+			margin-right: 25px;
+		}
+	}
+}

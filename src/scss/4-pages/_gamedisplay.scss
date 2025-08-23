@@ -1,0 +1,62 @@
+@use "../1-helpers/variables" as *;
+
+// Utility classes for conditional display
+.show-inline {
+	display: inline-block;
+}
+
+.hide {
+	display: none;
+}
+
+.game-display-page {
+	flex: 1 0 auto;
+}
+
+.mecCatBox,
+.game-info-row,
+.game-description,
+.game-info-container,
+.image-And-Rating {
+	width: 80vw;
+	margin: 10px;
+	max-width: 600px;
+}
+
+.pic-And-Game-Info {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.game-display-page,
+.mecCatBox,
+.image-And-Rating,
+.game-info-container,
+.game-info-column {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.game-info-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.mecCatBox {
+	text-align: center;
+}
+
+.game-images {
+	max-width: 90%;
+	max-height: 90%;
+	margin: 20px;
+}
+
+@media (max-width: $bp-mobile) {
+	.game-name {
+		font-size: 1.5em;
+	}
+}

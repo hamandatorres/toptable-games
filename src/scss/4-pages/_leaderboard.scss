@@ -1,0 +1,54 @@
+@use "../1-helpers/variables" as *;
+
+.leaderboard {
+	background: $secondary-color;
+	padding: 30px;
+	margin: 0 auto 20px auto;
+	width: 270px;
+	// @include border();
+	border: 6px double $text-color;
+	.leaderHeader {
+		font-family: $font-heading;
+		display: block;
+		text-align: center;
+		margin: 0 auto 30px auto;
+		color: $text-color;
+	}
+	h5 {
+		font-size: 1.2rem;
+		color: $text-color;
+		margin-top: -15px;
+	}
+	p {
+		font-family: $font-main;
+	}
+	.medals {
+		height: 20px;
+		margin-top: -4px;
+		margin-right: 4px;
+	}
+	.columns {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+	}
+	.leaderRow {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		margin-top: 10px;
+	}
+	.position {
+		display: flex;
+	}
+}
+
+// @media (min-width: $bp-tablet) {
+//     .leaderboard {
+//   height: 220px;
+//   min-width: 250px;
+//   margin-top: 45px;
+//   margin-right: 87px;
+//   margin-bottom: 10px;
+//     }
+// }

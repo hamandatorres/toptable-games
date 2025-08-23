@@ -1,0 +1,253 @@
+@use "../1-helpers/variables" as *;
+@use "../1-helpers/mixins" as *;
+
+#titleDescriptionSearch,
+#titleDescriptionLabel,
+#itemsPerPageSelector {
+	font-family: $font-main;
+	color: $text-color;
+	font-weight: bold;
+}
+
+@keyframes fadein {
+	from {
+		fill: transparent;
+		color: transparent;
+	}
+	to {
+		fill: $text-color;
+		color: $text-color;
+	}
+}
+
+@keyframes fadein2 {
+	from {
+		fill: transparent;
+		color: transparent;
+	}
+	to {
+		fill: $text-color;
+		color: text-color;
+	}
+}
+
+#searchComponentContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 400px;
+	height: 95vh;
+	position: sticky;
+	top: 10px;
+	margin: 10px 20px 0px 50px;
+}
+
+// Search bar with items per page
+#searchForm {
+	display: inline-flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+#searchButtonContainer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	min-width: 110px;
+}
+
+#titleDescriptionSearch {
+	font-size: 16pt;
+	margin: 10px 10px 10px 10px;
+	height: 35px;
+	width: 90%;
+	@include border;
+}
+
+#titleDescriptionSearchLabel {
+	font-size: 20pt;
+	font-family: $font-heading;
+}
+
+#itemsPerPageSelector {
+	height: 35px;
+	margin: 0px 5px 0px 20px;
+	@include border;
+}
+
+// Checkboxes
+
+#checkboxContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 15px;
+	max-width: 100vw;
+}
+
+#checkboxSubContainer,
+.mecCatContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.mecCatCheckboxes {
+	height: 35vh;
+	width: 100%;
+	overflow-y: scroll;
+	overflow-x: visible;
+	margin: 10px 20px 20px 20px;
+	padding: 20px;
+	@include border;
+}
+
+@media (max-height: 1100px) {
+	.mecCatCheckboxes {
+		height: 30vh;
+	}
+}
+@media (max-height: 700px) {
+	.mecCatCheckboxes {
+		height: 25vh;
+	}
+}
+
+@media (max-height: 550px) {
+	.mecCatCheckboxes {
+		height: 20vh;
+	}
+}
+
+@media (max-height: 450px) {
+	.mecCatCheckboxes {
+		height: 10vh;
+	}
+}
+
+@media (max-height: 350px) {
+	#titleDescriptionSearchLabel {
+		display: none;
+	}
+}
+.checkboxDiv {
+	margin: 5px 0px 5px 0px;
+}
+
+.checkLabel {
+	font-family: $font-main;
+	color: $text-color;
+	font-weight: bold;
+	font-size: 13pt;
+}
+
+// navigation arrows
+
+#arrowBox {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 200px;
+	font-family: $font-main;
+}
+
+.pageArrow {
+	fill: $text-color;
+}
+
+@media (max-width: $bp-tablet) {
+	#searchComponentContainer {
+		width: 100vw;
+		max-width: 100vw;
+		margin: 0px;
+		height: fit-content;
+		position: static;
+	}
+	#searchForm {
+		width: 90vw;
+	}
+	#checkboxSubContainer {
+		flex-direction: row;
+		justify-content: space-evenly;
+	}
+	.mecCatCheckboxes {
+		padding: 5px;
+	}
+
+	.mecCatContainer {
+		padding: 0px;
+		max-height: 200px;
+		width: 45%;
+	}
+	#arrowBox {
+		width: 95vw;
+		justify-content: space-between;
+	}
+
+	// Applied on Scroll position
+	.stickyArrows {
+		animation: fadein1 1.5s;
+		height: 25px;
+		position: fixed;
+		bottom: 30px;
+		color: transparent;
+	}
+	.noStickyArrows {
+		animation: fadein2 1.5s;
+	}
+
+	.pageArrowNS {
+		animation: fadein 1.5s;
+	}
+	.pageArrowS {
+		animation: fadein2 1.5s;
+	}
+}
+@media (max-width: $bp-mobile) {
+	#searchComponentContainer {
+		width: 100vw;
+		max-width: 100vw;
+		margin: 0px;
+		height: fit-content;
+		position: static;
+	}
+	#checkboxSubContainer {
+		flex-direction: column;
+	}
+	.mecCatCheckboxes {
+		max-height: 200px;
+	}
+	.mecCatContainer {
+		height: 100%;
+		width: 100%;
+	}
+	#arrowBox {
+		width: 95vw;
+		justify-content: space-between;
+	}
+	// Applied on Scroll position
+	.stickyArrows {
+		animation: fadein1 1.5s;
+		height: 25px;
+		position: fixed;
+		bottom: 10px;
+		color: transparent;
+	}
+	.noStickyArrows {
+		animation: fadein2 1.5s;
+	}
+
+	.pageArrowNS {
+		animation: fadein 1.5s;
+	}
+	.pageArrowS {
+		animation: fadein2 1.5s;
+	}
+}

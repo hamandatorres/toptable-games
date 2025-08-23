@@ -1,0 +1,148 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: toptable-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: toptable_games
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - toptable-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for session storage (optional upgrade)
+  redis:
+    image: redis:7-alpine
+    container_name: toptable-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - toptable-network
+    command: redis-server --appendonly yes
+
+  # Backend API Server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: toptable-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      SERVER_PORT: 4050
+      CONNECTION_STRING: postgresql://postgres:postgres@postgres:5432/toptable_games?sslmode=disable
+      SESSION_SECRET: your-super-secret-session-key-change-in-production
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4050:4050"
+    volumes:
+      - ./server:/app/server
+      - ./db:/app/db
+      - /app/node_modules
+    networks:
+      - toptable-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4050/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Development Server
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: toptable-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:4050
+      VITE_CLIENT_ID: ${VITE_CLIENT_ID}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - /app/node_modules
+    networks:
+      - toptable-network
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  toptable-network:
+    driver: bridge
+
+# Docker Compose Watch Configuration
+# Use: docker compose watch
+watch:
+  # Backend watch configuration
+  - path: ./server
+    action: sync
+    target: /app/server
+    ignore:
+      - node_modules/
+      - "*.log"
+
+  - path: ./db
+    action: sync
+    target: /app/db
+
+  - path: ./package.json
+    action: rebuild
+    target: /app/package.json
+
+  # Frontend watch configuration
+  - path: ./src
+    action: sync
+    target: /app/src
+    ignore:
+      - "**/*.test.ts"
+      - "**/*.test.tsx"
+      - "**/*.spec.ts"
+      - "**/*.spec.tsx"
+
+  - path: ./public
+    action: sync
+    target: /app/public
+
+  - path: ./index.html
+    action: sync
+    target: /app/index.html
+
+  - path: ./vite.config.ts
+    action: sync
+    target: /app/vite.config.ts
+
+  - path: ./tsconfig.json
+    action: sync
+    target: /app/tsconfig.json
+
+  - path: ./package.json
+    action: rebuild
+    target: /app/package.json

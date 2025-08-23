@@ -1,0 +1,66 @@
+// .leaderboard {
+//     font-family: 'Times New Roman', Times, serif;
+//     text-align: center;
+//     width: 50%;
+//     // border: 2px solid black;
+// }
+
+// .boardTable {
+//     width: 50%;
+//     padding: 0;
+//     font-size: 50px;
+//     color: #004242;
+//     margin: 0 0 30px 0;
+//     // border: 2px solid black;
+// }
+
+// .userData {
+//     border-top: 1px solid silver;
+//     background-color: white;
+//     padding: 5%;
+//     margin: 5%;
+//     font-size: 0;
+// }
+
+// .userDataP {
+//     padding: 0;
+//     margin: 0;
+// }
+
+// /* board items, from left to right as they are on the page */
+
+// .boardPositionWrapper {
+//     transform: translateY(-50%);
+//     width: 10%;
+//     font-size: 40px;
+//     display: inline-table;
+// }
+
+// .boardUsernameWrapper {
+//     position: relative;
+//     transform: translateY(-50%);
+//     width: 50%;
+//     font-size: 40px;
+//     display: inline-table;
+// }
+
+// .boardScoreWrapper {
+//     position: relative;
+//     transform: translateY(-50%);
+//     width: 10%;
+//     font-size: 40px;
+//     display: inline-table;
+//     text-align: right;
+// }
+
+// @media only screen and (max-width: 740px) {
+//     .boardUsernameWrapper,
+//     .boardScoreWrapper,
+//     .boardPositionWrapper {
+//         font-size: 25px;
+//     }
+
+//     .userAvatar {
+//         height: 50px;
+//     }
+// }

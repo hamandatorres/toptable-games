@@ -1,0 +1,5 @@
+@use "variables" as *;
+
+@mixin border {
+	border: 1px solid $text-color;
+}

@@ -1,0 +1,29 @@
+@use "../1-helpers/mixins" as *;
+
+.reviewContainer {
+	@include border;
+	width: 80vw;
+	height: fit-content;
+	padding: 10px;
+	margin: 10px;
+	max-width: 700px;
+}
+
+.reviewBox {
+	margin-top: 10px;
+	width: 100%;
+	overflow: scroll;
+	white-space: break-spaces;
+	height: fit-content;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.reviewBox::-webkit-scrollbar {
+	display: none;
+}
+
+.usernameHeader {
+	display: inline-block;
+	margin-left: 10px;
+}

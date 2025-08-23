@@ -1,0 +1,7 @@
+// Use modern @use syntax instead of deprecated @import
+@use "1-helpers" as helpers;
+@use "2-basics" as basics;
+@use "3-containers" as containers;
+@use "4-pages" as pages;
+
+@import url("https://fonts.googleapis.com/css2?family=Cinzel&family=Raleway:wght@300&display=swap");
