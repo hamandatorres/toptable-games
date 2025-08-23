@@ -2,6 +2,7 @@
 	"name": "toptable-games",
 	"private": true,
 	"version": "1.0.0",
+	"type": "module",
 	"description": "TopTable Games - Board Game Collection Tracker",
 	"main": "server/index.js",
 	"scripts": {
@@ -13,6 +14,7 @@
 		"start": "node server/index.js",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
+		"type-check": "tsc --noEmit",
 		"preview": "vite preview",
 		"docker:build": "docker build -t toptable-games .",
 		"docker:run": "docker run -p 3000:3000 -p 4050:4050 toptable-games",
@@ -62,7 +64,7 @@
 		"vite": "^7.1.2"
 	},
 	"engines": {
-		"node": ">=18.0.0",
+		"node": ">=20.19.0",
 		"npm": ">=9.0.0"
 	},
 	"keywords": [

@@ -82,9 +82,13 @@ const ItemDisplay: React.FC<GameDispProps & RouteComponentProps> = (
       setPlayCount(play_count);
       setRating(rating);
       setReview(review ? review : '');
-      review ? setAddEdit(true) : setAddEdit(false);
+      if (review) {
+        setAddEdit(true);
+      } else {
+        setAddEdit(false);
+      }
     }
-  }, [userGames]);
+  }, [userGames, gameID]);
 
   const increasePlayCount = () => {
     axios

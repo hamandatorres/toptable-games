@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Hero from "../Header/Hero";
@@ -18,17 +18,16 @@ const GameLibrary: React.FC = () => {
 
 	useEffect(() => mapGames(), [searchResults, rating]);
 
-	const associateRatings = (apiGames: ThumbGame[]) => {
-		const output = apiGames;
+	const associateRatings = useCallback((apiGames: ThumbGame[]) => {
+		const output = [...apiGames]; // Create a copy to avoid mutation
 		output.forEach((game: ThumbGame, ind: number) => {
-			rating.forEach((rating) => {
-				game.id === rating.game_id
-					? (apiGames[ind].avgRating = rating.average_rating)
-					: (apiGames[ind].avgRating = apiGames[ind].avgRating);
-			});
+			const gameRating = rating.find(r => r.game_id === game.id);
+			if (gameRating) {
+				output[ind].avgRating = gameRating.average_rating;
+			}
 		});
 		setSearchResults(output);
-	};
+	}, [rating]);
 
 	const getAPIGames = async (
 		currentPage: number,
@@ -54,7 +53,7 @@ const GameLibrary: React.FC = () => {
     });
 	};
 
-	const mapGames = () => {
+	const mapGames = useCallback(() => {
 		setMappedGames(
 			searchResults.map((elem: ThumbGame, id: number) => {
 				return (
@@ -64,7 +63,7 @@ const GameLibrary: React.FC = () => {
 				);
 			})
 		);
-	};
+	}, [searchResults]);
 
 	return (
 		<div id="gameLibrary">
