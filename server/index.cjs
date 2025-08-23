@@ -1,8 +1,8 @@
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "../.env.local") });
+require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const massive = require("massive");
+const path = require("path");
 
 // Security imports
 const EnvironmentValidator = require("./config/environmentValidator");
@@ -33,7 +33,7 @@ if (config.nodeEnv === "production") {
 }
 
 // JSON parsing with security
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: '10mb' }));
 
 // Serve static files from Vite build
 if (config.nodeEnv === "production") {
@@ -51,20 +51,17 @@ app.use(session(sessionConfig));
 app.get("/api/health", SecurityConfig.healthCheck);
 
 //Auth endpoints with security middleware
-app.post(
-	"/api/auth/register",
-	SQLSecurityMiddleware.auditLog("user_register"),
+app.post("/api/auth/register", 
+	SQLSecurityMiddleware.auditLog('user_register'),
 	auth.register
 );
-app.post(
-	"/api/auth/login",
-	SQLSecurityMiddleware.auditLog("user_login"),
+app.post("/api/auth/login", 
+	SQLSecurityMiddleware.auditLog('user_login'),
 	auth.login
 );
 app.get("/api/auth/user", authMiddleware.authorize, auth.getUser);
-app.delete(
-	"/api/auth/logout",
-	SQLSecurityMiddleware.auditLog("user_logout"),
+app.delete("/api/auth/logout", 
+	SQLSecurityMiddleware.auditLog('user_logout'),
 	auth.logout
 );
 
@@ -127,18 +124,12 @@ SecurityConfig.configureDatabaseSecurity(massive, config)
 	.then((dbInstance) => {
 		app.set("db", dbInstance);
 		console.log(`🚀 Database connected with security settings`);
-
+		
 		app.listen(config.serverPort, () => {
 			console.log(`🚀 Server running on port ${config.serverPort}`);
 			console.log(`🌍 Environment: ${config.nodeEnv}`);
-			console.log(
-				`🔒 Security: ${
-					config.nodeEnv === "production" ? "Production" : "Development"
-				} mode`
-			);
-			console.log(
-				`🏥 Health check: http://localhost:${config.serverPort}/api/health`
-			);
+			console.log(`🔒 Security: ${config.nodeEnv === 'production' ? 'Production' : 'Development'} mode`);
+			console.log(`🏥 Health check: http://localhost:${config.serverPort}/api/health`);
 		});
 	})
 	.catch((err) => {
