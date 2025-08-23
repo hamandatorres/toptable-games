@@ -21,14 +21,22 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				manualChunks: {
-					vendor: ["react", "react-dom", "react-router-dom"],
+					vendor: ["react", "react-dom"],
+					router: ["react-router-dom"],
 					redux: ["@reduxjs/toolkit", "react-redux"],
 					utils: ["axios", "react-toastify"],
+					chart: ["chart.js"],
+					ui: ["html-react-parser"],
 				},
 			},
 		},
+		chunkSizeWarningLimit: 600, // Increase limit slightly for main app chunk
 	},
 	define: {
-		"process.env": process.env,
+		// Only expose specific environment variables that are safe for client-side
+		"process.env.NODE_ENV": JSON.stringify(
+			process.env.NODE_ENV || "development"
+		),
+		"process.env.VITE_API_URL": JSON.stringify(process.env.VITE_API_URL || ""),
 	},
 });

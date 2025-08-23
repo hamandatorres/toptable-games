@@ -6,7 +6,7 @@ export default defineConfig({
 	plugins: [react()],
 	test: {
 		globals: true,
-		environment: "jsdom",
+		environment: "happy-dom",
 		setupFiles: ["./src/test/setup.ts"],
 		css: true,
 		reporters: ["verbose"],
@@ -25,6 +25,10 @@ export default defineConfig({
 		exclude: ["node_modules", "dist", ".idea", ".git", ".cache", "server"],
 	},
 	define: {
-		"process.env": process.env,
+		// Only expose specific environment variables that are safe for client-side
+		"process.env.NODE_ENV": JSON.stringify(
+			process.env.NODE_ENV || "development"
+		),
+		"process.env.VITE_API_URL": JSON.stringify(process.env.VITE_API_URL || ""),
 	},
 });
