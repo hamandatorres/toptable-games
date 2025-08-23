@@ -5,17 +5,20 @@ Thank you for your interest in contributing to TopTable Games! This document pro
 ## Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/hamandatorres/toptable-games.git
    cd toptable-games
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your database credentials
@@ -38,16 +41,19 @@ Thank you for your interest in contributing to TopTable Games! This document pro
 ## Pull Request Process
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 2. **Make your changes**
+
    - Write tests for new functionality
    - Follow the existing code style
    - Update documentation if needed
 
 3. **Test your changes**
+
    ```bash
    npm run lint     # Check code style
    npm run build    # Ensure it builds
@@ -55,6 +61,7 @@ Thank you for your interest in contributing to TopTable Games! This document pro
    ```
 
 4. **Commit your changes**
+
    ```bash
    git add .
    git commit -m "feat: add your feature description"
@@ -68,6 +75,7 @@ Thank you for your interest in contributing to TopTable Games! This document pro
 ## Commit Message Format
 
 Use conventional commits:
+
 - `feat:` for new features
 - `fix:` for bug fixes
 - `docs:` for documentation changes
