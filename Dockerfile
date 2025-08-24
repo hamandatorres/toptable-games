@@ -17,7 +17,7 @@ RUN addgroup -g 1001 -S nodejs && \
 COPY package*.json ./
 
 # Install dependencies as root, then change ownership
-RUN npm ci --ignore-scripts && \
+RUN npm ci --ignore-scripts --verbose && \
     npm cache clean --force
 
 # Copy source code and change ownership
@@ -26,9 +26,11 @@ COPY --chown=nodejs:nodejs . .
 # Build the frontend with optimizations (as root to avoid permission issues)
 ENV NODE_ENV=production
 ENV CI=true
+ENV VITE_BUILD_TARGET=production
 RUN npm run build && \
     ls -la dist/ && \
-    echo "Build completed successfully"
+    echo "Build completed successfully" && \
+    du -sh dist/
 
 # Switch to non-root user after build
 USER nodejs
