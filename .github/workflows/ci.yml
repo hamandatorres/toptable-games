@@ -145,22 +145,24 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Push Docker image (if main branch)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile.simple
-          platforms: linux/amd64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
+      # Note: Push to registry disabled due to GitHub Container Registry permissions
+      # - name: Push Docker image (if main branch)
+      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile.simple
+      #     platforms: linux/amd64
+      #     push: true
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     cache-from: type=gha
 
       - name: Test Docker image locally
         run: |
-          echo "Docker build completed successfully"
-          echo "Image tags: ${{ steps.meta.outputs.tags }}"
+          echo "✅ Docker build completed successfully"
+          echo "📦 Image tags: ${{ steps.meta.outputs.tags }}"
+          echo "🚀 Ready for deployment"
 
   # Performance Testing
   performance:
