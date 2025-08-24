@@ -12,6 +12,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --ignore-scripts && \
     npm install @rollup/rollup-linux-x64-musl @swc/core-linux-x64-musl @esbuild/linux-x64 --no-save || true && \
+    npm uninstall sass-embedded && \
+    npm install sass --no-save && \
     npm cache clean --force
 
 # Copy all source code
