@@ -1,0 +1,30 @@
+# Use same base as GitHub Actions
+FROM node:22-slim
+
+# Install platform dependencies upfront
+RUN apt-get update && apt-get install -y \
+    python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY scripts/ ./scripts/
+
+# Install with platform detection
+RUN npm ci --ignore-scripts
+RUN npm run install-platform-deps || true
+
+# Copy source and build
+COPY . .
+# Set CI environment for SASS selection
+ENV CI=true
+# Debug: Check what's installed
+RUN npm list sass sass-embedded || echo "SASS packages checked"
+# Debug: Try building step by step
+RUN npm run install-platform-deps
+RUN npm run build
+
+# Test the build
+RUN test -d dist && echo "Build successful"
