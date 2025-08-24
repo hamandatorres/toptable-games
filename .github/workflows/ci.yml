@@ -37,6 +37,8 @@ jobs:
           npm ci
           # Install missing platform-specific dependencies for Linux CI
           npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu --no-save || true
+          # Install native SASS for embedded mode
+          npm install sass-embedded --no-save || true
 
       - name: Type checking
         run: npm run type-check
