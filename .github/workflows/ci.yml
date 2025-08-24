@@ -185,6 +185,8 @@ jobs:
         run: |
           npm ci
           npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu @esbuild/linux-x64 --no-save || true
+          npm uninstall sass-embedded
+          npm install sass --no-save
 
       - name: Build for performance testing
         run: npm run build
