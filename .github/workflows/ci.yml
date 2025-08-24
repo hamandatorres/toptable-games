@@ -33,13 +33,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: |
-          npm ci
-          # Force install platform-specific dependencies for Linux CI
-          npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu sass-embedded --save-dev --force
-          # Verify installations
-          ls -la node_modules/@rollup/ || echo "Rollup modules not found"
-          ls -la node_modules/@swc/ || echo "SWC modules not found"
+        run: npm ci
 
       - name: Type checking
         run: npm run type-check
