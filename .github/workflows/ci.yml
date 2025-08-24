@@ -16,6 +16,7 @@ jobs:
   # Quality Assurance
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       matrix:
@@ -33,11 +34,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Clean install with fresh dependency resolution for CI
-          rm -rf node_modules package-lock.json
-          npm install
-          # Explicitly install platform-specific dependencies for Linux
-          npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu --no-save
+          npm ci
+          # Install missing platform-specific dependencies for Linux CI
+          npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu --no-save || true
 
       - name: Type checking
         run: npm run type-check
