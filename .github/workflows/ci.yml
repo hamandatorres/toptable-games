@@ -33,9 +33,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --force
-          # Ensure Rollup native dependencies are properly installed for Linux
-          npm install @rollup/rollup-linux-x64-gnu --no-save
+          # Clean install with fresh dependency resolution for CI
+          rm -rf node_modules package-lock.json
+          npm install
+          # Explicitly install platform-specific dependencies for Linux
+          npm install @rollup/rollup-linux-x64-gnu @swc/core-linux-x64-gnu --no-save
 
       - name: Type checking
         run: npm run type-check
