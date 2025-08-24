@@ -42,6 +42,7 @@
 2. ✅ **SCSS Syntax Issues** - Updated `Skeleton.scss` to use modern `@use` syntax
 3. ✅ **Package Dependencies** - Replaced `sass-embedded` with `sass` in package.json
 4. ✅ **Vite Configuration** - Updated to explicitly use sass implementation
+5. ✅ **ESLint Compliance** - Fixed require() import to use ES module syntax
 
 **Remaining Issue:**
 
@@ -59,7 +60,7 @@
 #### **Modified Files:**
 
 - `package.json` - Replaced sass-embedded with sass
-- `vite.config.ts` - Added explicit SASS implementation configuration
+- `vite.config.ts` - Added explicit SASS implementation configuration (ES module import)
 - `src/components/UI/Skeleton.scss` - Updated to modern @use syntax
 - `tsconfig.app.json` - Fixed invalid TypeScript compiler options
 - `tsconfig.node.json` - Fixed invalid TypeScript compiler options
