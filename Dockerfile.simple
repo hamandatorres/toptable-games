@@ -10,7 +10,9 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm ci --ignore-scripts && \
+# Clean install with workaround for optional dependencies issue
+RUN rm -rf package-lock.json node_modules 2>/dev/null || true && \
+    npm install && \
     npm install @rollup/rollup-linux-x64-musl @swc/core-linux-x64-musl @esbuild/linux-x64 --no-save || true && \
     npm uninstall sass-embedded && \
     npm install sass --no-save && \
