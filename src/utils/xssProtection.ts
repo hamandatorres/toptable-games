@@ -206,9 +206,14 @@ export class XSSProtection {
 				byte.toString(16).padStart(2, "0")
 			).join("");
 		} else {
-			// Node.js environment - use dynamic import
-			const crypto = eval("require")("crypto") as typeof import("crypto");
-			return crypto.randomBytes(16).toString("hex");
+			// Node.js environment - use fallback implementation
+			// Generate random string without using crypto module
+			const chars = "0123456789abcdef";
+			let result = "";
+			for (let i = 0; i < 32; i++) {
+				result += chars[Math.floor(Math.random() * chars.length)];
+			}
+			return result;
 		}
 	}
 

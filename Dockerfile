@@ -17,21 +17,21 @@ RUN addgroup -g 1001 -S nodejs && \
 COPY package*.json ./
 
 # Install dependencies as root, then change ownership
-RUN npm ci --only=production --ignore-scripts && \
+RUN npm ci --ignore-scripts && \
     npm cache clean --force
 
 # Copy source code and change ownership
 COPY --chown=nodejs:nodejs . .
 
-# Install all dependencies for build (including dev dependencies)
-RUN npm install --ignore-scripts
-
-# Switch to non-root user for build
-USER nodejs
-
-# Build the frontend with optimizations
+# Build the frontend with optimizations (as root to avoid permission issues)
 ENV NODE_ENV=production
-RUN npm run build
+ENV CI=true
+RUN npm run build && \
+    ls -la dist/ && \
+    echo "Build completed successfully"
+
+# Switch to non-root user after build
+USER nodejs
 
 # Stage 2: Setup the backend with the built frontend
 FROM node:22-alpine AS production
