@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import sass from "sass";
+import sassEmbedded from "sass-embedded";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,8 +8,8 @@ export default defineConfig({
 	css: {
 		preprocessorOptions: {
 			scss: {
-				// Explicitly use sass implementation
-				implementation: sass,
+				// Explicitly use sass-embedded
+				implementation: sassEmbedded,
 			},
 		},
 	},
