@@ -1,13 +1,16 @@
 # Trivy ignore file for TopTable Games
 
 # Ignore npm audit issues that are already handled
+
 CVE-2023-26159
 CVE-2024-4068
 
 # Ignore development dependencies vulnerabilities in production
+
 CVE-2023-45853
 CVE-2024-28863
 
 # Ignore Docker base image vulnerabilities that don't affect our application
+
 CVE-2024-0727
 CVE-2024-2511
