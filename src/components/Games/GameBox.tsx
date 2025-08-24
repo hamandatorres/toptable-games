@@ -23,6 +23,6 @@ const GameBox: React.FC<GameBoxProps> = React.memo((props: GameBoxProps) => {
 });
 
 // Add display name for debugging
-GameBox.displayName = 'GameBox';
+GameBox.displayName = "GameBox";
 
 export default GameBox;

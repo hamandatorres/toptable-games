@@ -7,12 +7,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Cinzel&family=Raleway:wght@300&display=swap");
 
 // Performance: Loading spinner for lazy-loaded components
-.loading-container, .chart-loading {
+.loading-container,
+.chart-loading {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	min-height: 200px;
-	
+
 	.loading-spinner {
 		display: inline-block;
 		width: 40px;
@@ -21,9 +22,9 @@
 		border-top: 3px solid #3498db;
 		border-radius: 50%;
 		animation: spin 1s linear infinite;
-		
+
 		&::after {
-			content: '';
+			content: "";
 			display: block;
 			margin: 8px;
 		}
@@ -31,6 +32,10 @@
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }

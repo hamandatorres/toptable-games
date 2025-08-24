@@ -5,6 +5,10 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import "./index.css";
 import App from "./App.tsx";
+import startPerformanceMonitoring from "./utils/webVitals";
+
+// Initialize performance monitoring
+startPerformanceMonitoring();
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>

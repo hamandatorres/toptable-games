@@ -18,14 +18,19 @@ export default defineConfig({
 	build: {
 		outDir: "dist",
 		sourcemap: false,
-		minify: 'terser',
+		minify: "terser",
 		rollupOptions: {
 			output: {
 				manualChunks: {
 					vendor: ["react", "react-dom"],
 					router: ["react-router-dom"],
 					redux: ["@reduxjs/toolkit", "react-redux"],
-					utils: ["axios", "react-toastify", "dompurify", "isomorphic-dompurify"],
+					utils: [
+						"axios",
+						"react-toastify",
+						"dompurify",
+						"isomorphic-dompurify",
+					],
 					// Separate chart.js into its own chunk for lazy loading
 					chart: ["chart.js"],
 					// Keep UI components in their own chunk

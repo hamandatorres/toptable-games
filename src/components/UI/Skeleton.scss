@@ -1,0 +1,389 @@
+// Skeleton loading animations and styles
+@import "../../scss/1-helpers/variables";
+@import "../../scss/1-helpers/mixins";
+
+// Base skeleton styles
+.skeleton {
+	display: block;
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	border-radius: 4px;
+	position: relative;
+	overflow: hidden;
+
+	// Dynamic sizing using data attributes
+	&[data-width] {
+		width: attr(data-width);
+	}
+
+	&[data-height] {
+		height: attr(data-height);
+	}
+
+	// Default sizes for common variants
+	&--text {
+		width: 100%;
+		height: 1rem;
+		border-radius: 4px;
+		margin: 4px 0;
+	}
+
+	&--rectangular {
+		width: 100%;
+		height: 200px;
+		border-radius: 8px;
+	}
+
+	&--circular {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+	}
+
+	// Size overrides for specific dimensions
+	&[data-width="20px"] {
+		width: 20px;
+	}
+	&[data-width="40px"] {
+		width: 40px;
+	}
+	&[data-width="60px"] {
+		width: 60px;
+	}
+	&[data-width="80px"] {
+		width: 80px;
+	}
+	&[data-width="100px"] {
+		width: 100px;
+	}
+	&[data-width="150px"] {
+		width: 150px;
+	}
+	&[data-width="200px"] {
+		width: 200px;
+	}
+	&[data-width="300px"] {
+		width: 300px;
+	}
+	&[data-width="40%"] {
+		width: 40%;
+	}
+	&[data-width="60%"] {
+		width: 60%;
+	}
+	&[data-width="80%"] {
+		width: 80%;
+	}
+	&[data-width="90%"] {
+		width: 90%;
+	}
+
+	&[data-height="12px"] {
+		height: 12px;
+	}
+	&[data-height="14px"] {
+		height: 14px;
+	}
+	&[data-height="16px"] {
+		height: 16px;
+	}
+	&[data-height="20px"] {
+		height: 20px;
+	}
+	&[data-height="24px"] {
+		height: 24px;
+	}
+	&[data-height="32px"] {
+		height: 32px;
+	}
+	&[data-height="40px"] {
+		height: 40px;
+	}
+	&[data-height="80px"] {
+		height: 80px;
+	}
+	&[data-height="200px"] {
+		height: 200px;
+	}
+	&[data-height="300px"] {
+		height: 300px;
+	}
+
+	// Animations
+	&--pulse {
+		animation: skeleton-pulse 1.5s ease-in-out infinite;
+	}
+
+	&--wave {
+		animation: skeleton-wave 2s linear infinite;
+	}
+
+	&--none {
+		animation: none;
+	}
+
+	// Dark mode support
+	@media (prefers-color-scheme: dark) {
+		background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+		background-size: 200% 100%;
+	}
+}
+
+// Skeleton animations
+@keyframes skeleton-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+@keyframes skeleton-wave {
+	0% {
+		background-position: -200% 0;
+	}
+	100% {
+		background-position: 200% 0;
+	}
+}
+
+// Game Card Skeleton
+.game-card-skeleton {
+	display: flex;
+	flex-direction: column;
+	padding: 16px;
+	border: 1px solid #e0e0e0;
+	border-radius: 12px;
+	background: white;
+	width: 100%;
+	max-width: 280px;
+	margin: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+	.skeleton-image {
+		border-radius: 8px;
+		margin-bottom: 12px;
+	}
+
+	.skeleton-content {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.skeleton-title {
+			margin-bottom: 4px;
+		}
+
+		.skeleton-subtitle {
+			margin-bottom: 12px;
+		}
+
+		.skeleton-meta {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 12px;
+		}
+
+		.skeleton-actions {
+			display: flex;
+			gap: 8px;
+			margin-top: auto;
+
+			.skeleton {
+				border-radius: 6px;
+			}
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		background: #1a1a1a;
+		border-color: #333;
+	}
+}
+
+// Game Library Skeleton
+.game-library-skeleton {
+	padding: 20px;
+
+	.skeleton-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 24px;
+		gap: 20px;
+
+		.skeleton-heading {
+			flex-shrink: 0;
+		}
+
+		.skeleton-search {
+			border-radius: 8px;
+		}
+
+		@media (max-width: 768px) {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 12px;
+
+			.skeleton-search {
+				width: 100%;
+			}
+		}
+	}
+
+	.skeleton-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 20px;
+		justify-items: center;
+
+		@media (max-width: 768px) {
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			gap: 16px;
+		}
+
+		@media (max-width: 480px) {
+			grid-template-columns: 1fr;
+			gap: 12px;
+		}
+	}
+}
+
+// User Profile Skeleton
+.user-profile-skeleton {
+	padding: 24px;
+	background: white;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+	.skeleton-avatar-section {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin-bottom: 24px;
+
+		.skeleton-user-info {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		@media (max-width: 480px) {
+			flex-direction: column;
+			text-align: center;
+			gap: 12px;
+		}
+	}
+
+	.skeleton-stats {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		gap: 16px;
+
+		.skeleton-stat {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			gap: 4px;
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		background: #1a1a1a;
+	}
+}
+
+// Chart Skeleton
+.chart-skeleton {
+	padding: 20px;
+	background: white;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+	.skeleton-chart-title {
+		margin-bottom: 16px;
+	}
+
+	.skeleton-chart-area {
+		margin-bottom: 16px;
+		border-radius: 8px;
+	}
+
+	.skeleton-chart-legend {
+		display: flex;
+		justify-content: center;
+		gap: 20px;
+		flex-wrap: wrap;
+
+		.skeleton-legend-item {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		background: #1a1a1a;
+	}
+}
+
+// Table Skeleton
+.table-skeleton {
+	background: white;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+	.skeleton-table-header {
+		display: grid;
+		grid-template-columns: repeat(var(--columns, 4), 1fr);
+		gap: 16px;
+		padding: 16px;
+		background: #f8f9fa;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.skeleton-table-row {
+		display: grid;
+		grid-template-columns: repeat(var(--columns, 4), 1fr);
+		gap: 16px;
+		padding: 12px 16px;
+		border-bottom: 1px solid #f0f0f0;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		background: #1a1a1a;
+
+		.skeleton-table-header {
+			background: #2a2a2a;
+			border-bottom-color: #333;
+		}
+
+		.skeleton-table-row {
+			border-bottom-color: #333;
+		}
+	}
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+	.skeleton {
+		animation: none !important;
+	}
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+	.skeleton {
+		background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+		border: 1px solid #999;
+	}
+}

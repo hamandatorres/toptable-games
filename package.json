@@ -24,7 +24,14 @@
 		"docker:build": "docker build -t toptable-games .",
 		"docker:run": "docker run -p 3000:3000 -p 4050:4050 toptable-games",
 		"docker:dev": "docker-compose up --build",
-		"docker:prod": "docker-compose -f docker-compose.prod.yml up --build"
+		"docker:prod": "docker-compose -f docker-compose.prod.yml up --build",
+		"deploy:prod": "node scripts/deploy-production.ps1",
+		"deploy:backup": "node scripts/deploy-production.ps1 backup",
+		"deploy:health": "node scripts/deploy-production.ps1 health",
+		"security:audit": "npm audit && node scripts/security-audit.mjs",
+		"performance:analyze": "npm run build && npx webpack-bundle-analyzer dist/stats.json",
+		"monitoring:start": "docker-compose -f docker-compose.prod.yml --profile monitoring up -d",
+		"monitoring:stop": "docker-compose -f docker-compose.prod.yml --profile monitoring down"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
@@ -52,7 +59,8 @@
 		"react-redux": "^9.2.0",
 		"react-router-dom": "^6.30.1",
 		"react-toastify": "^11.0.5",
-		"validator": "^13.15.15"
+		"validator": "^13.15.15",
+		"web-vitals": "^5.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.33.0",

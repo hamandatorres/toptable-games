@@ -78,11 +78,13 @@ function App() {
 	return (
 		<div className="App">
 			<Header />
-			<Suspense fallback={
-				<div className="loading-container">
-					<div className="loading-spinner">Loading...</div>
-				</div>
-			}>
+			<Suspense
+				fallback={
+					<div className="loading-container">
+						<div className="loading-spinner">Loading...</div>
+					</div>
+				}
+			>
 				<Routes>
 					<Route path="/" element={<GameLibrary />} />
 					<Route path="/auth" element={<Login />} />
