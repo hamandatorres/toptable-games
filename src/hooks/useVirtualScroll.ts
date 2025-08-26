@@ -107,14 +107,15 @@ export const useVariableHeightVirtualScroll = (
 	const [scrollTop, setScrollTop] = useState(0);
 	const [itemHeights, setItemHeights] = useState<number[]>([]);
 
-	// Cache item heights
+	// Cache item heights using the provided getItemHeight function
 	const heights = useMemo(() => {
 		const heights = new Array(itemCount);
 		for (let i = 0; i < itemCount; i++) {
-			heights[i] = itemHeights[i] || estimatedItemHeight;
+			// Use cached height if available, otherwise get it from the callback, fallback to estimated
+			heights[i] = itemHeights[i] ?? getItemHeight(i) ?? estimatedItemHeight;
 		}
 		return heights;
-	}, [itemCount, itemHeights, estimatedItemHeight]);
+	}, [itemCount, itemHeights, getItemHeight, estimatedItemHeight]);
 
 	// Calculate item positions
 	const itemPositions = useMemo(() => {

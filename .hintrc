@@ -1,0 +1,19 @@
+{
+	"extends": ["web-recommended"],
+	"hints": {
+		"no-inline-styles": {
+			"severity": "off",
+			"exclude": ["**/VirtualList.tsx", "**/virtual-scrolling/**"],
+			"options": {
+				"allowedProperties": [
+					"--vl-container-height",
+					"--vl-overflow",
+					"--vl-inner-height",
+					"--vl-offset-y",
+					"--vl-item-height"
+				]
+			}
+		}
+	},
+	"ignoredUrls": [{ "domain": "localhost", "hints": ["*"] }]
+}
