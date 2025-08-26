@@ -4,25 +4,25 @@ on:
   workflow_dispatch: # Manual trigger only
   push:
     branches: [test-ci-improvements] # Only run on test branch
-  
+
 jobs:
   test-deps:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
-          
+
       - name: Install base dependencies
         run: npm ci --ignore-scripts
-          
+
       - name: Test platform dependency detection
         run: |
           echo "=== Testing Platform Detection ==="
@@ -32,7 +32,7 @@ jobs:
           npm list @rollup/rollup-linux-x64-gnu || echo "Rollup GNU not found"
           npm list @swc/core-linux-x64-gnu || echo "SWC GNU not found"
           npm list @esbuild/linux-x64 || echo "esbuild not found"
-          
+
       - name: Test SASS setup (if script exists)
         run: |
           echo "=== Testing SASS Setup ==="
@@ -42,7 +42,7 @@ jobs:
             echo "SASS setup script not found, checking current SASS packages"
           fi
           npm list sass sass-embedded || echo "SASS packages checked"
-          
+
       - name: Try TypeScript compilation
         run: |
           echo "=== Testing TypeScript Compilation ==="
@@ -50,7 +50,7 @@ jobs:
             echo "TypeScript compilation failed"
             exit 1
           }
-          
+
       - name: Try linting
         run: |
           echo "=== Testing Linting ==="
@@ -58,7 +58,7 @@ jobs:
             echo "Linting failed"
             exit 1
           }
-          
+
       - name: Try minimal build (without optimizations)
         run: |
           echo "=== Testing Minimal Build ==="
@@ -71,7 +71,7 @@ jobs:
             find node_modules -name "*sass*" -type d | head -10
             exit 1
           }
-          
+
       - name: Verify build output
         run: |
           echo "=== Verifying Build Output ==="
@@ -87,14 +87,14 @@ jobs:
   test-docker-ci:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: Test Docker CI build
         run: |
           echo "=== Testing Docker CI Build ==="
@@ -102,7 +102,7 @@ jobs:
             echo "Docker CI build failed"
             exit 1
           }
-          
+
       - name: Test Docker build output
         run: |
           echo "=== Testing Docker Build Output ==="
@@ -110,7 +110,7 @@ jobs:
             echo "No dist directory in Docker build"
             exit 1
           }
-          
+
       - name: Test Docker platform detection
         run: |
           echo "=== Testing Docker Platform Detection ==="
@@ -122,24 +122,24 @@ jobs:
   test-incremental-steps:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
+
     strategy:
       matrix:
         test-step: [deps-only, sass-only, typescript-only, build-only]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
-          
+
       - name: Install base dependencies
         run: npm ci --ignore-scripts
-        
+
       - name: Test step - ${{ matrix.test-step }}
         run: |
           case "${{ matrix.test-step }}" in
