@@ -1,31 +1,33 @@
 /* Virtual List Component Styles */
 .virtual-list-container {
-	overflow: auto;
+	height: var(--vl-container-height, auto);
+	overflow: var(--vl-overflow, auto);
 	position: relative;
-	height: var(--container-height, 400px);
+	width: 100%;
+	will-change: scroll-position;
 }
 
 .virtual-list-inner {
+	height: var(--vl-inner-height, auto);
 	position: relative;
-	height: var(--inner-height, 100%);
+	width: 100%;
+	pointer-events: none;
 }
 
 .virtual-list-viewport {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	transform: var(--viewport-transform, translateY(0px));
+	position: relative;
+	width: 100%;
+	pointer-events: auto;
+	transform: translateY(var(--vl-offset-y, 0));
+	will-change: transform;
 }
 
 .virtual-list-item {
+	height: var(--vl-item-height, auto);
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
 	overflow: hidden;
-	height: var(--item-height, auto);
-}
-
-/* Container height control via data attributes */
-.virtual-list-container[data-container-height] {
-	height: attr(data-container-height px);
 }
 
 /* Loading and Empty States */
@@ -33,7 +35,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: var(--container-height, 400px);
+	height: 100%;
 	font-size: 1.1rem;
 	color: var(--text-secondary, #666);
 }
@@ -43,7 +45,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	height: var(--container-height, 400px);
+	height: 100%;
 	text-align: center;
 	color: var(--text-secondary, #666);
 }

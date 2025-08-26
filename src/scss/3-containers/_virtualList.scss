@@ -1,0 +1,111 @@
+@use "../1-helpers/variables" as *;
+@use "../1-helpers/mixins" as *;
+
+/* Virtual List Component Styles */
+.virtual-list-container {
+	height: var(--vl-container-height, auto);
+	overflow: var(--vl-overflow, auto);
+	position: relative;
+	width: 100%;
+	will-change: scroll-position;
+	scroll-behavior: smooth;
+
+	// Performance optimizations
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+	// Focus and accessibility
+	&:focus {
+		outline: 2px solid $highlight-color;
+		outline-offset: 2px;
+	}
+
+	// Mobile optimizations
+	@media (max-width: $bp-mobile) {
+		// Avoid deprecated properties
+		touch-action: pan-y;
+	}
+}
+
+.virtual-list-inner {
+	height: var(--vl-inner-height, auto);
+	position: relative;
+	width: 100%;
+	pointer-events: none;
+
+	// Performance optimizations
+	will-change: transform;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.virtual-list-viewport {
+	position: relative;
+	width: 100%;
+	pointer-events: auto;
+	transform: translateY(var(--vl-offset-y, 0));
+	will-change: transform;
+
+	// Performance optimizations
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.virtual-list-item {
+	height: var(--vl-item-height, auto);
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+/* Loading and Empty States */
+.virtual-list-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	font-size: 1.1rem;
+	color: $secondary-color;
+	font-family: $font-main;
+}
+
+.virtual-list-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	text-align: center;
+	color: $secondary-color;
+	padding: 2rem;
+	font-family: $font-main;
+
+	h3 {
+		margin-bottom: 0.5rem;
+		color: $text-color;
+		font-family: $font-heading;
+	}
+}
+
+/* Responsive design */
+@media (max-width: $bp-tablet) {
+	.virtual-list-container {
+		// Optimize for tablet scrolling
+		scroll-snap-type: y proximity;
+	}
+
+	.virtual-list-item {
+		scroll-snap-align: start;
+	}
+}
+
+@media (max-width: $bp-mobile) {
+	.virtual-list-empty {
+		padding: 1rem;
+
+		h3 {
+			font-size: 1.2rem;
+		}
+	}
+}

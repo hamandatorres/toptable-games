@@ -1,6 +1,9 @@
+// Virtual scrolling requires inline styles for performance - these are dynamic values
+// that change frequently during scrolling and must be applied directly for optimal performance
+
 import React, { ReactNode, useRef } from "react";
 import { useVirtualScroll } from "../../hooks/useVirtualScroll";
-import "./VirtualList.css";
+// Import styles from main SCSS - virtual list styles are included in the main stylesheet
 
 interface VirtualListProps<T> {
 	items: T[];
@@ -66,25 +69,41 @@ export function VirtualList<T>({
 		);
 	}
 
+	// Set CSS custom properties for dynamic styling
+	const containerStyle = {
+		"--vl-container-height": `${containerHeight}px`,
+		"--vl-overflow": scrollElementProps.style.overflow || "auto",
+	} as React.CSSProperties;
+
+	const innerStyle = {
+		"--vl-inner-height": innerElementProps.style.height || "auto",
+	} as React.CSSProperties;
+
+	const viewportStyle = {
+		"--vl-offset-y": `${offsetY}px`,
+	} as React.CSSProperties;
+
 	return (
 		<div
 			ref={containerRef}
 			className={`virtual-list-container ${className}`}
 			data-container-height={containerHeight}
-			style={scrollElementProps.style}
+			style={containerStyle}
 			onScroll={handleScroll}
 		>
-			<div className="virtual-list-inner" style={innerElementProps.style}>
+			<div className="virtual-list-inner" style={innerStyle}>
 				<div
 					className="virtual-list-viewport"
 					data-offset-y={offsetY}
-					style={{
-						transform: `translateY(${offsetY}px)`,
-					}}
+					style={viewportStyle}
 				>
 					{visibleItems.map((index: number) => {
 						const item = items[index];
 						if (!item) return null;
+
+						const itemStyle = {
+							"--vl-item-height": `${itemHeight}px`,
+						} as React.CSSProperties;
 
 						return (
 							<div
@@ -92,9 +111,7 @@ export function VirtualList<T>({
 								className="virtual-list-item"
 								data-item-height={itemHeight}
 								data-index={index}
-								style={{
-									height: `${itemHeight}px`,
-								}}
+								style={itemStyle}
 							>
 								{renderItem(item, index)}
 							</div>
