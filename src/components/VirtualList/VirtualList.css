@@ -1,0 +1,94 @@
+/* Virtual List Component Styles */
+.virtual-list-container {
+	overflow: auto;
+	position: relative;
+	height: var(--container-height, 400px);
+}
+
+.virtual-list-inner {
+	position: relative;
+	height: var(--inner-height, 100%);
+}
+
+.virtual-list-viewport {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	transform: var(--viewport-transform, translateY(0px));
+}
+
+.virtual-list-item {
+	overflow: hidden;
+	height: var(--item-height, auto);
+}
+
+/* Container height control via data attributes */
+.virtual-list-container[data-container-height] {
+	height: attr(data-container-height px);
+}
+
+/* Loading and Empty States */
+.virtual-list-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--container-height, 400px);
+	font-size: 1.1rem;
+	color: var(--text-secondary, #666);
+}
+
+.virtual-list-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: var(--container-height, 400px);
+	text-align: center;
+	color: var(--text-secondary, #666);
+}
+
+.virtual-list-empty h3 {
+	margin-bottom: 0.5rem;
+	color: var(--text-primary, #333);
+}
+
+/* Smooth scrolling */
+.virtual-list-container {
+	scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+.virtual-list-container,
+.virtual-list-inner,
+.virtual-list-viewport {
+	will-change: transform;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+/* Focus and accessibility */
+.virtual-list-container:focus {
+	outline: 2px solid var(--primary-color, #007bff);
+	outline-offset: 2px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.virtual-list-container {
+		/* Modern touch scrolling */
+		overscroll-behavior: contain;
+	}
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+	.virtual-list-loading,
+	.virtual-list-empty {
+		color: var(--text-secondary-dark, #ccc);
+	}
+
+	.virtual-list-empty h3 {
+		color: var(--text-primary-dark, #fff);
+	}
+}

@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import Hero from "../Header/Hero";
 import SearchBar from "./SearchBar";
-import GameBox from "./GameBox";
 import Leaderboard from "../Header/LeaderBoard";
+import VirtualizedGameList from "./VirtualizedGameList";
 import { ThumbGame } from "customTypes";
 import { RootState } from "../../redux/store";
 import { MockGameService } from "../../services/mockGameData";
@@ -12,15 +12,6 @@ const GameLibrary: React.FC = () => {
 	const [searchResults, setSearchResults] = useState<ThumbGame[]>([]);
 
 	const rating = useSelector((state: RootState) => state.meccatReducer.rating);
-
-	// Memoize the game mapping to avoid unnecessary re-renders
-	const mappedGames = useMemo(() => {
-		return searchResults.map((elem: ThumbGame) => (
-			<div key={elem.id}>
-				<GameBox thumbGame={elem} />
-			</div>
-		));
-	}, [searchResults]);
 
 	const associateRatings = useCallback(
 		(apiGames: ThumbGame[]) => {
@@ -75,6 +66,14 @@ const GameLibrary: React.FC = () => {
 		getAPIGames(0, "", [], [], "20");
 	}, [getAPIGames]);
 
+	// Calculate container height for virtual scrolling
+	// This should be the height of the search results area
+	const containerHeight = useMemo(() => {
+		// You can adjust this based on your layout
+		// It should be the available height for the game list
+		return window.innerHeight - 400; // Subtract header, search bar, etc.
+	}, []);
+
 	return (
 		<div id="gameLibrary">
 			<Hero />
@@ -86,15 +85,19 @@ const GameLibrary: React.FC = () => {
 					<SearchBar getAPIGames={getAPIGames} />
 				</div>
 				<main id="searchResults">
-					{mappedGames.length > 0 ? (
-						mappedGames
-					) : (
-						<div className="no-results">
-							<h2>Welcome to TopTable Games!</h2>
-							<p>Search for board games using the search bar above.</p>
-							<p>Click "Search" with no filters to see all available games.</p>
-						</div>
-					)}
+					<VirtualizedGameList
+						games={searchResults}
+						containerHeight={containerHeight}
+						itemHeight={320} // Estimated height of GameBox component
+						overscan={3}
+						className="game-library-list"
+						emptyMessage={{
+							title: "Welcome to TopTable Games!",
+							description: "Search for board games using the search bar above.",
+							action:
+								'Click "Search" with no filters to see all available games.',
+						}}
+					/>
 				</main>
 			</div>
 		</div>
