@@ -1,0 +1,168 @@
+name: Test Platform Dependencies
+
+on:
+  workflow_dispatch: # Manual trigger only
+  push:
+    branches: [test-ci-improvements] # Only run on test branch
+
+jobs:
+  test-deps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - name: Install base dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Test platform dependency detection
+        run: |
+          echo "=== Testing Platform Detection ==="
+          node scripts/install-platform-deps.js
+          echo ""
+          echo "=== Checking installed packages ==="
+          npm list @rollup/rollup-linux-x64-gnu || echo "Rollup GNU not found"
+          npm list @swc/core-linux-x64-gnu || echo "SWC GNU not found"
+          npm list @esbuild/linux-x64 || echo "esbuild not found"
+
+      - name: Test SASS setup (if script exists)
+        run: |
+          echo "=== Testing SASS Setup ==="
+          if [ -f "scripts/setup-sass.js" ]; then
+            node scripts/setup-sass.js
+          else
+            echo "SASS setup script not found, checking current SASS packages"
+          fi
+          npm list sass sass-embedded || echo "SASS packages checked"
+
+      - name: Try TypeScript compilation
+        run: |
+          echo "=== Testing TypeScript Compilation ==="
+          npm run type-check || {
+            echo "TypeScript compilation failed"
+            exit 1
+          }
+
+      - name: Try linting
+        run: |
+          echo "=== Testing Linting ==="
+          npm run lint || {
+            echo "Linting failed"
+            exit 1
+          }
+
+      - name: Try minimal build (without optimizations)
+        run: |
+          echo "=== Testing Minimal Build ==="
+          # Try build with minimal optimizations first
+          NODE_ENV=development npm run build || {
+            echo "Development build failed, checking dependencies"
+            npm list | grep -E "(rollup|sass|swc|esbuild)" || echo "No build dependencies found"
+            echo "=== Checking for missing native binaries ==="
+            find node_modules -name "*rollup*" -type d | head -10
+            find node_modules -name "*sass*" -type d | head -10
+            exit 1
+          }
+
+      - name: Verify build output
+        run: |
+          echo "=== Verifying Build Output ==="
+          if [ -d "dist" ]; then
+            echo "✅ Build directory created"
+            ls -la dist/
+            du -sh dist/
+          else
+            echo "❌ Build directory not found"
+            exit 1
+          fi
+
+  test-docker-ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Test Docker CI build
+        run: |
+          echo "=== Testing Docker CI Build ==="
+          docker build -f Dockerfile.ci -t toptable-ci-test . || {
+            echo "Docker CI build failed"
+            exit 1
+          }
+
+      - name: Test Docker build output
+        run: |
+          echo "=== Testing Docker Build Output ==="
+          docker run --rm toptable-ci-test ls -la dist/ || {
+            echo "No dist directory in Docker build"
+            exit 1
+          }
+
+      - name: Test Docker platform detection
+        run: |
+          echo "=== Testing Docker Platform Detection ==="
+          docker run --rm toptable-ci-test node scripts/install-platform-deps.js || {
+            echo "Platform detection failed in Docker"
+            exit 1
+          }
+
+  test-incremental-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        test-step: [deps-only, sass-only, typescript-only, build-only]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - name: Install base dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Test step - ${{ matrix.test-step }}
+        run: |
+          case "${{ matrix.test-step }}" in
+            "deps-only")
+              echo "=== Testing Dependencies Only ==="
+              node scripts/install-platform-deps.js
+              npm list | grep -E "(rollup|sass|swc|esbuild)" || echo "Dependencies checked"
+              ;;
+            "sass-only")
+              echo "=== Testing SASS Only ==="
+              node scripts/install-platform-deps.js
+              # Test SASS compilation without full build
+              npx sass --version || echo "SASS not available"
+              ;;
+            "typescript-only")
+              echo "=== Testing TypeScript Only ==="
+              node scripts/install-platform-deps.js
+              npm run type-check
+              ;;
+            "build-only")
+              echo "=== Testing Build Only ==="
+              node scripts/install-platform-deps.js
+              NODE_ENV=development npm run build
+              test -d dist && echo "✅ Build successful"
+              ;;
+          esac

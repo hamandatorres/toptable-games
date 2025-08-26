@@ -10,7 +10,7 @@
 		"dev:server": "NODE_OPTIONS='--loader ts-node/esm' nodemon server/index.js",
 		"dev:full": "concurrently \"npm run dev\" \"npm run dev:server\"",
 		"build": "vite build",
-		"build:ci": "npm run install-platform-deps && npm run build",
+		"build:ci": "npm run install-platform-deps && npm run setup-sass && npm run build",
 		"build:server": "node --experimental-loader ts-node/esm server/index.js",
 		"start": "node --loader ts-node/esm server/index.js",
 		"lint": "eslint .",
