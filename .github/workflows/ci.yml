@@ -8,6 +8,19 @@ on:
   release:
     types: [published]
 
+# Add proper permissions for GitHub Actions
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  checks: read
+  deployments: read
+  issues: read
+  packages: write
+  pull-requests: read
+  repository-projects: read
+  statuses: read
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -152,7 +165,7 @@ jobs:
           exit-code: "0"
 
       - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         continue-on-error: true
         with:
