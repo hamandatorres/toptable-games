@@ -9,7 +9,7 @@ const PORT = 4050;
 // Simple middleware for development
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		origin: ["http://localhost:3000", "http://localhost:3001"],
 		credentials: true,
 	})
 );
@@ -54,15 +54,19 @@ app.get("/api/auth/user", async (req, res) => {
 	try {
 		if (!db) return res.status(500).json({ error: "Database not connected" });
 
+		console.log("🔍 Auth user request - session user:", req.session.user);
+
 		// For development, return a mock user or check session
 		if (req.session.user) {
-			const user = await db.user.getUser([req.session.user.user_id]);
+			const user = await db.user.getUserById([req.session.user.user_id]);
+			console.log("✅ Found user by ID:", user[0]?.username || "not found");
 			res.json(user[0] || null);
 		} else {
+			console.log("❌ No session user found");
 			res.json(null);
 		}
 	} catch (err) {
-		console.error("Auth error:", err);
+		console.error("❌ Auth error:", err);
 		res.status(500).json({ error: "Server error" });
 	}
 });
@@ -102,7 +106,25 @@ app.get("/api/player/leaderboard", async (req, res) => {
 	}
 });
 
-// User games endpoints
+// User games endpoints (both usergame and usergames for compatibility)
+app.get("/api/usergame", async (req, res) => {
+	try {
+		if (!db) return res.status(500).json({ error: "Database not connected" });
+
+		if (!req.session.user) {
+			return res.json([]);
+		}
+
+		const userGames = await db.userGames.getUserGames([
+			req.session.user.user_id,
+		]);
+		res.json(userGames);
+	} catch (err) {
+		console.error("User games error:", err);
+		res.status(500).json({ error: "Server error" });
+	}
+});
+
 app.get("/api/usergames", async (req, res) => {
 	try {
 		if (!db) return res.status(500).json({ error: "Database not connected" });
@@ -121,31 +143,113 @@ app.get("/api/usergames", async (req, res) => {
 	}
 });
 
+// Registration endpoint
+app.post("/api/auth/register", async (req, res) => {
+	try {
+		if (!db) return res.status(500).json({ error: "Database not connected" });
+
+		const { firstName, lastName, username, email } = req.body;
+
+		// Simple development registration
+		const existingUser = await db.user.getUserByUsername([username]);
+		if (existingUser.length > 0) {
+			return res.status(400).json({ error: "Username already exists" });
+		}
+
+		// Insert new user (simplified for development)
+		// SQL expects: (email, username, first_name, last_name, hash)
+		const newUser = await db.user.register([
+			email,
+			username,
+			firstName,
+			lastName,
+			"dev-hash",
+		]);
+		if (newUser.length > 0) {
+			req.session.user = newUser[0];
+			res.json({ success: true, user: newUser[0] });
+		} else {
+			res.status(400).json({ error: "Registration failed" });
+		}
+	} catch (err) {
+		console.error("Registration error:", err);
+		res.status(500).json({ error: "Server error" });
+	}
+});
+
 // Simple login for development
 app.post("/api/auth/login", async (req, res) => {
 	try {
 		if (!db) return res.status(500).json({ error: "Database not connected" });
 
-		const { username } = req.body;
+		console.log("🔍 Login request received:");
+		console.log("  Headers:", req.headers);
+		console.log("  Body:", req.body);
+		console.log("  Raw body type:", typeof req.body);
 
-		// Simple development login - just find user by username
-		const user = await db.user.getUserByUsername([username]);
+		const { username, userCreds, password } = req.body;
+
+		// Development login - support both simple username and frontend userCreds format
+		const loginIdentifier = username || userCreds;
+
+		if (!loginIdentifier) {
+			console.log("❌ No login identifier provided");
+			return res.status(400).json({ error: "Username or userCreds required" });
+		}
+
+		console.log("🔍 Login identifier:", loginIdentifier);
+
+		// Simple development login - just find user by username (no password validation)
+		const user = await db.user.getUserByUsername([loginIdentifier]);
 		if (user.length > 0) {
 			req.session.user = user[0];
-			res.json({ success: true, user: user[0] });
+			console.log("✅ Login successful for user:", user[0].username);
+			res.json(user[0]); // Return user object directly to match frontend expectations
 		} else {
+			console.log("❌ User not found:", loginIdentifier);
 			res.status(401).json({ error: "User not found" });
 		}
 	} catch (err) {
-		console.error("Login error:", err);
+		console.error("❌ Login error:", err);
 		res.status(500).json({ error: "Server error" });
 	}
 });
 
-// Logout
+// Logout (support GET, POST, and DELETE)
 app.post("/api/auth/logout", (req, res) => {
-	req.session.destroy();
-	res.json({ success: true });
+	console.log("🚪 Logout request received (POST)");
+	req.session.destroy((err) => {
+		if (err) {
+			console.error("❌ Session destroy error:", err);
+			return res.status(500).json({ error: "Logout failed" });
+		}
+		console.log("✅ User logged out successfully");
+		res.json({ success: true });
+	});
+});
+
+app.get("/api/auth/logout", (req, res) => {
+	console.log("🚪 Logout request received (GET)");
+	req.session.destroy((err) => {
+		if (err) {
+			console.error("❌ Session destroy error:", err);
+			return res.status(500).json({ error: "Logout failed" });
+		}
+		console.log("✅ User logged out successfully");
+		res.json({ success: true });
+	});
+});
+
+app.delete("/api/auth/logout", (req, res) => {
+	console.log("🚪 Logout request received (DELETE)");
+	req.session.destroy((err) => {
+		if (err) {
+			console.error("❌ Session destroy error:", err);
+			return res.status(500).json({ error: "Logout failed" });
+		}
+		console.log("✅ User logged out successfully");
+		res.json({ success: true });
+	});
 });
 
 // Global error handlers
