@@ -70,13 +70,22 @@ app.get("/api/auth/user", async (req, res) => {
 // Game ratings endpoint
 app.get("/api/game/ratings", async (req, res) => {
 	try {
-		if (!db) return res.status(500).json({ error: "Database not connected" });
+		console.log("📊 Game ratings endpoint called");
+		if (!db) {
+			console.log("❌ Database not connected");
+			return res.status(500).json({ error: "Database not connected" });
+		}
+
+		console.log("🔍 Checking db.game functions:", Object.keys(db.game || {}));
+		console.log("📈 Calling allGameAverageRatings...");
 
 		const ratings = await db.game.allGameAverageRatings();
+		console.log("✅ Ratings retrieved:", ratings?.length || 0, "records");
 		res.json(ratings);
 	} catch (err) {
-		console.error("Game ratings error:", err);
-		res.status(500).json({ error: "Server error" });
+		console.error("❌ Game ratings error:", err.message);
+		console.error("Stack:", err.stack);
+		res.status(500).json({ error: "Server error", details: err.message });
 	}
 });
 
@@ -137,6 +146,15 @@ app.post("/api/auth/login", async (req, res) => {
 app.post("/api/auth/logout", (req, res) => {
 	req.session.destroy();
 	res.json({ success: true });
+});
+
+// Global error handlers
+process.on("uncaughtException", (err) => {
+	console.error("Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+	console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
 
 app.listen(PORT, () => {
