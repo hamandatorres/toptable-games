@@ -91,40 +91,40 @@ module.exports = {
 		try {
 			const token = req.params.token;
 			if (!token) {
-				return res.status(400).json({ 
-					valid: false, 
-					message: "No token provided" 
+				return res.status(400).json({
+					valid: false,
+					message: "No token provided",
 				});
 			}
 
 			const userCreds = await db.pwdReset.getUserByResetToken(token);
-			
+
 			if (userCreds.length === 0) {
-				return res.status(400).json({ 
-					valid: false, 
-					message: "Invalid or expired reset token" 
+				return res.status(400).json({
+					valid: false,
+					message: "Invalid or expired reset token",
 				});
 			}
 
 			const user = userCreds[0];
-			
+
 			// Check if token is expired
 			if (user.reset_expiration.getTime() < Date.now()) {
-				return res.status(400).json({ 
-					valid: false, 
-					message: "Reset token has expired" 
+				return res.status(400).json({
+					valid: false,
+					message: "Reset token has expired",
 				});
 			}
 
-			res.status(200).json({ 
-				valid: true, 
-				message: "Token is valid" 
+			res.status(200).json({
+				valid: true,
+				message: "Token is valid",
 			});
 		} catch (error) {
 			console.error("Token validation error:", error);
-			res.status(500).json({ 
-				valid: false, 
-				message: "Server error during token validation" 
+			res.status(500).json({
+				valid: false,
+				message: "Server error during token validation",
 			});
 		}
 	},

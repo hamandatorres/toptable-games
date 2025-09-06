@@ -126,10 +126,26 @@ app.get("/api/pwdReset/validate/:token", passwordReset.validateToken);
 app.put("/api/pwdReset/submit/:token", passwordReset.processReset);
 
 // Security Monitoring Endpoints
-app.get("/api/security/dashboard", authMiddleware.authorize, security.getSecurityDashboard);
-app.get("/api/security/alerts", authMiddleware.authorize, security.getSecurityAlerts);
-app.post("/api/security/block-ip/:ip", authMiddleware.authorize, security.blockIP);
-app.post("/api/security/unblock-ip/:ip", authMiddleware.authorize, security.unblockIP);
+app.get(
+	"/api/security/dashboard",
+	authMiddleware.authorize,
+	security.getSecurityDashboard
+);
+app.get(
+	"/api/security/alerts",
+	authMiddleware.authorize,
+	security.getSecurityAlerts
+);
+app.post(
+	"/api/security/block-ip/:ip",
+	authMiddleware.authorize,
+	security.blockIP
+);
+app.post(
+	"/api/security/unblock-ip/:ip",
+	authMiddleware.authorize,
+	security.unblockIP
+);
 
 // //Player endpoints
 // Item Display //User Graph

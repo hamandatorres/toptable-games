@@ -16,7 +16,9 @@ const GameDisplay = lazy(() => import("./components/Games/GameDisplay"));
 const MyAccount = lazy(() => import("./components/User/MyAccount"));
 const ItemDisplay = lazy(() => import("./components/User/ItemDisplay"));
 const ResetPassword = lazy(() => import("./components/User/PasswordReset"));
-const SecurityDashboard = lazy(() => import("./components/Admin/SecurityDashboard"));
+const SecurityDashboard = lazy(
+	() => import("./components/Admin/SecurityDashboard")
+);
 import type { User as UserType } from "./redux/userReducer";
 import { fetchUserGames } from "./redux/userGameReducer";
 import { updateUser } from "./redux/userReducer";
