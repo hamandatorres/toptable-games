@@ -77,10 +77,24 @@ const Login: React.FC = () => {
 				email: email.trim(),
 				password,
 			})
-			.then((res) => {
-				const user = res.data;
-				dispatch(updateUser(user));
-				dispatch(getUserGames()); // Fetch user's games after registration
+			.then(async (res) => {
+				// After successful registration, fetch the complete user profile
+				// This ensures we get the same data structure as when logging in
+				try {
+					const userResponse = await axios.get<User>("/api/auth/user");
+					const user = userResponse.data;
+					if (user) {
+						dispatch(updateUser(user));
+						dispatch(getUserGames()); // Fetch user's games after registration
+					}
+				} catch (userErr) {
+					console.error("Error fetching user after registration:", userErr);
+					// Fallback to registration response data
+					const user = res.data;
+					dispatch(updateUser(user));
+					dispatch(getUserGames());
+				}
+
 				setFirstName("");
 				setLastName("");
 				setEmail("");
