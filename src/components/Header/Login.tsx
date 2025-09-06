@@ -9,7 +9,6 @@ import { updateUser, User } from "../../redux/userReducer";
 import Button from "../StyledComponents/Button";
 import {
 	usePasswordValidation,
-	useFormValidation,
 } from "../../hooks/useFormValidation";
 import PasswordStrengthIndicator from "../StyledComponents/PasswordStrengthIndicator";
 
