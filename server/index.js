@@ -24,7 +24,7 @@ const player = require("./controllers/playerController");
 const userGames = require("./controllers/userGamesController");
 const userInfo = require("./controllers/userInfoController");
 const passwordReset = require("./controllers/passwordReset");
-
+const security = require("./controllers/securityController");
 const app = express();
 
 // Validate environment and get secure configuration
@@ -124,11 +124,22 @@ app.delete("/api/user/delete", authMiddleware.authorize, userInfo.deleteUser);
 app.put("/api/pwdReset/req", passwordReset.resetPwdEmail);
 app.get("/api/pwdReset/validate/:token", passwordReset.validateToken);
 app.put("/api/pwdReset/submit/:token", passwordReset.processReset);
+
+// Security Monitoring Endpoints
+app.get("/api/security/dashboard", authMiddleware.authorize, security.getSecurityDashboard);
+app.get("/api/security/alerts", authMiddleware.authorize, security.getSecurityAlerts);
+app.post("/api/security/block-ip/:ip", authMiddleware.authorize, security.blockIP);
+app.post("/api/security/unblock-ip/:ip", authMiddleware.authorize, security.unblockIP);
+
 // //Player endpoints
 // Item Display //User Graph
 app.get("/api/player/playcount/:id", player.getPlayerTotalPlays);
 // Leaderboard
 app.get("/api/player/leaderboard", player.getAllPlayersTotalPlays);
+
+// Error handling middleware (must be after all routes)
+const { expressErrorHandler } = require("./middleware/errorHandler");
+app.use(expressErrorHandler);
 
 // Catch-all handler for SPA - must be last route
 if (config.nodeEnv === "production") {

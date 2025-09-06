@@ -9,6 +9,11 @@ const {
 	clearFailedAttempts,
 	isAccountLocked,
 } = require("../middleware/enhancedRateLimiting");
+const { 
+	createError, 
+	logSecurityEventWithMetrics, 
+	SECURITY_EVENTS 
+} = require("../middleware/errorHandler");
 
 module.exports = {
 	register: async (req, res) => {
@@ -146,6 +151,15 @@ module.exports = {
 			if (storedUser.length === 0) {
 				// Record failed attempt for non-existent user (still track attempts)
 				recordFailedAttempt(sanitizedUserCreds);
+				
+				// Log security event
+				logSecurityEventWithMetrics(SECURITY_EVENTS.LOGIN_FAILURE, {
+					ip: req.ip,
+					userAgent: req.get('User-Agent'),
+					sessionId: req.sessionID,
+					extraData: { reason: 'user_not_found', userCreds: sanitizedUserCreds }
+				});
+				
 				return res.status(404).json({
 					error: "user_not_found",
 					message: "Invalid username or email",
@@ -159,6 +173,16 @@ module.exports = {
 			if (!isPasswordValid) {
 				// Record failed login attempt
 				const attemptInfo = recordFailedAttempt(sanitizedUserCreds);
+
+				// Log security event
+				logSecurityEventWithMetrics(SECURITY_EVENTS.LOGIN_FAILURE, {
+					ip: req.ip,
+					userAgent: req.get('User-Agent'),
+					userId: storedUser[0].user_id,
+					username: storedUser[0].username,
+					sessionId: req.sessionID,
+					extraData: { reason: 'invalid_password', attempts: attemptInfo.attempts }
+				});
 
 				return res.status(403).json({
 					error: "invalid_password",
@@ -184,6 +208,17 @@ module.exports = {
 				}
 
 				req.session.user = user[0];
+				
+				// Log successful login
+				logSecurityEventWithMetrics(SECURITY_EVENTS.LOGIN_SUCCESS, {
+					ip: req.ip,
+					userAgent: req.get('User-Agent'),
+					userId: user[0].user_id,
+					username: user[0].username,
+					sessionId: req.sessionID,
+					extraData: { loginMethod: 'password' }
+				});
+				
 				return res.status(200).json({
 					success: true,
 					user: user[0],

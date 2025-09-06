@@ -78,8 +78,8 @@ class SecurityConfig {
 
 		// 5. XSS Protection
 		app.use(XSSProtectionMiddleware.sanitizeRequest);
-		app.use("/auth", XSSProtectionMiddleware.enhancedSecurityHeaders);
-		app.use("/api", XSSProtectionMiddleware.enhancedSecurityHeaders);
+		app.use("/auth", XSSProtectionMiddleware.setXSSHeaders);
+		app.use("/api", XSSProtectionMiddleware.setXSSHeaders);
 
 		// 6. SQL injection prevention
 		app.use(SQLSecurityMiddleware.validateInput);
