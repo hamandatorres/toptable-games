@@ -1,12 +1,17 @@
 import axios from "axios";
-import { User } from "customTypes";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import { getUserGames } from "../../redux/userGameReducer";
+import { updateUser, User } from "../../redux/userReducer";
 import Button from "../StyledComponents/Button";
+import {
+	usePasswordValidation,
+	useFormValidation,
+} from "../../hooks/useFormValidation";
+import PasswordStrengthIndicator from "../StyledComponents/PasswordStrengthIndicator";
 
 const Login: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
@@ -18,82 +23,139 @@ const Login: React.FC = () => {
 	const [userCreds, setUserCreds] = useState<string>("");
 	const [resetDisabler, setResetDisabler] = useState(true);
 	const [resetEmail, setResetEmail] = useState("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const [isLogin, setIsLogin] = useState<boolean>(true);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
+	// Password validation hook
+	const { validatePassword, passwordStrength } = usePasswordValidation();
+
 	const toggleLogin = (): void => {
 		setIsLogin(!isLogin);
 	};
 
+	const handlePasswordChange = (newPassword: string): void => {
+		setPassword(newPassword);
+		validatePassword(newPassword);
+	};
+
 	const register = (): void => {
+		// Validate password before submitting
+		const passwordValidation = validatePassword(password);
+		if (!passwordValidation.isValid) {
+			toast.error(passwordValidation.message);
+			return;
+		}
+
+		// Validate other required fields
+		if (
+			!username.trim() ||
+			!firstName.trim() ||
+			!lastName.trim() ||
+			!email.trim()
+		) {
+			toast.error("Please fill in all required fields");
+			return;
+		}
+
+		// Basic email validation
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(email)) {
+			toast.error("Please enter a valid email address");
+			return;
+		}
+
+		setIsLoading(true);
+
 		axios
 			.post<User>("/api/auth/register", {
-				username,
-				first_name: firstName,
-				last_name: lastName,
-				email,
+				username: username.trim(),
+				firstName: firstName.trim(),
+				lastName: lastName.trim(),
+				email: email.trim(),
 				password,
 			})
 			.then((res) => {
 				const user = res.data;
-				dispatch({ type: "UPDATE_USER", payload: user });
+				dispatch(updateUser(user));
+				dispatch(getUserGames()); // Fetch user's games after registration
 				setFirstName("");
 				setLastName("");
 				setEmail("");
+				setUsername("");
+				setPassword("");
+				toast.success("Account created successfully!");
 				navigate("/");
 			})
 			.catch((err) => {
-				if (err.response.data === "email") {
+				console.error("Registration error:", err);
+				const errorData = err.response?.data;
+
+				if (errorData?.error === "email_exists") {
 					toast.error(
-						"An account with the email you entered already exists in our database. Please log in using your email and password or create a new account using a different email."
+						"An account with this email already exists. Please use a different email or try logging in."
 					);
-				} else if (err.response.data === "username") {
+				} else if (errorData?.error === "username_exists") {
 					toast.error(
-						"An account with the username you entered already exists in our database. Please log in using your email and password or create a new account using a different username."
+						"This username is already taken. Please choose a different username."
 					);
-				} else if (err.response.data === "incomplete") {
+				} else if (errorData?.error === "invalid_password") {
 					toast.error(
-						"Please enter at least an email, username and password to continue."
+						errorData.message || "Password does not meet security requirements."
 					);
+				} else if (errorData?.error === "incomplete") {
+					toast.error("Please fill in all required fields.");
 				} else {
-					toast.error(
-						"A problem was encountered while attempting to create your new account. Please try again later."
-					);
+					toast.error("Unable to create account. Please try again later.");
 				}
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	};
 
 	const login = (): void => {
+		if (!userCreds.trim() || !loginPassword.trim()) {
+			toast.error("Please enter your email/username and password");
+			return;
+		}
+
+		setIsLoading(true);
+
 		axios
-			.post<User>("/api/auth/login", { userCreds, password: loginPassword })
+			.post<User>("/api/auth/login", {
+				userCreds: userCreds.trim(),
+				password: loginPassword,
+			})
 			.then((res) => {
 				const user = res.data;
 				setUserCreds("");
 				setLoginPassword("");
-				dispatch({ type: "UPDATE_USER", payload: user });
+				dispatch(updateUser(user));
 				dispatch(getUserGames());
-				dispatch(getUserGames());
+				toast.success("Welcome back!");
 				navigate("/");
 			})
 			.catch((err) => {
-				if (err.response.data === "userCreds") {
+				console.error("Login error:", err);
+				const errorData = err.response?.data;
+
+				if (errorData === "userCreds" || err.response?.status === 404) {
 					toast.error(
-						"An account with the email or username you entered does not exist within our database. Please try again or register for an account"
+						"No account found with this email or username. Please check your credentials or create a new account."
 					);
-				} else if (err.response.data === "password") {
-					toast.error(
-						"The password you entered is incorrect, please try again."
-					);
-				} else if (err.response.data === "incomplete") {
-					toast.error(
-						"Please enter your email/username and password to continue."
-					);
-				} else
-					toast.error(
-						"There was an error while attempting to log you in to your account. Please try again later."
-					);
+				} else if (errorData === "password" || err.response?.status === 403) {
+					toast.error("Incorrect password. Please try again.");
+				} else if (errorData === "incomplete" || err.response?.status === 400) {
+					toast.error("Please enter both email/username and password.");
+				} else {
+					toast.error("Unable to log in. Please try again later.");
+				}
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	};
 
@@ -147,9 +209,13 @@ const Login: React.FC = () => {
 								}
 							/>
 							<br></br>
-							<Button>login</Button>
+							<Button type="submit" disabled={isLoading}>
+								{isLoading ? "Logging in..." : "login"}
+							</Button>
 							<br />
-							<Button onClick={toggleLogin}>register</Button>
+							<Button type="button" onClick={toggleLogin}>
+								register
+							</Button>
 						</form>
 					) : (
 						<form
@@ -201,11 +267,24 @@ const Login: React.FC = () => {
 								id="password"
 								value={password}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setPassword(e.target.value)
+									handlePasswordChange(e.target.value)
 								}
+								aria-describedby="password-strength"
 							/>
+							{password && (
+								<div id="password-strength" style={{ marginTop: "8px" }}>
+									<PasswordStrengthIndicator
+										score={passwordStrength.score}
+										feedback={passwordStrength.feedback}
+										requirements={passwordStrength.requirements}
+										showRequirements={true}
+									/>
+								</div>
+							)}
 							<br></br>
-							<Button>register</Button>
+							<Button type="submit" disabled={isLoading}>
+								{isLoading ? "Creating Account..." : "register"}
+							</Button>
 							<div className="auth-container__already-registered">
 								<span className="clickable" onClick={toggleLogin}>
 									already register?

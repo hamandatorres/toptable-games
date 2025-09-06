@@ -2,6 +2,7 @@ const express = require("express");
 const massive = require("massive");
 const cors = require("cors");
 const session = require("express-session");
+const { validatePassword } = require("./utils/passwordValidation");
 
 const app = express();
 const PORT = 4050;
@@ -38,6 +39,7 @@ massive({
 })
 	.then((dbInstance) => {
 		db = dbInstance;
+		app.set("db", dbInstance); // Make db available to middleware
 		console.log("✅ Connected to PostgreSQL database");
 	})
 	.catch((err) => {
@@ -148,7 +150,27 @@ app.post("/api/auth/register", async (req, res) => {
 	try {
 		if (!db) return res.status(500).json({ error: "Database not connected" });
 
-		const { firstName, lastName, username, email } = req.body;
+		const { firstName, lastName, username, email, password } = req.body;
+
+		// Validate required fields
+		if (!firstName || !lastName || !username || !email || !password) {
+			return res.status(400).json({
+				error: "incomplete",
+				message: "All fields are required",
+			});
+		}
+
+		// For development, we'll use our comprehensive password validation
+		// Note: In production, this should use the authController instead
+		console.log("⚠️  DEV MODE: Using comprehensive password validation");
+
+		const passwordValidation = validatePassword(password);
+		if (!passwordValidation.isValid) {
+			return res.status(400).json({
+				error: "invalid_password",
+				message: passwordValidation.message,
+			});
+		}
 
 		// Simple development registration
 		const existingUser = await db.user.getUserByUsername([username]);
@@ -167,7 +189,20 @@ app.post("/api/auth/register", async (req, res) => {
 		]);
 		if (newUser.length > 0) {
 			req.session.user = newUser[0];
-			res.json({ success: true, user: newUser[0] });
+
+			// Explicitly save the session
+			req.session.save((err) => {
+				if (err) {
+					console.error("❌ Registration session save error:", err);
+					return res.status(500).json({ error: "Session save failed" });
+				}
+				console.log(
+					"✅ Registration successful for user:",
+					newUser[0].username
+				);
+				console.log("✅ Session saved with user_id:", newUser[0].user_id);
+				res.json(newUser[0]); // Return user object directly to match frontend expectations
+			});
 		} else {
 			res.status(400).json({ error: "Registration failed" });
 		}
@@ -203,8 +238,17 @@ app.post("/api/auth/login", async (req, res) => {
 		const user = await db.user.getUserByUsername([loginIdentifier]);
 		if (user.length > 0) {
 			req.session.user = user[0];
-			console.log("✅ Login successful for user:", user[0].username);
-			res.json(user[0]); // Return user object directly to match frontend expectations
+
+			// Explicitly save the session
+			req.session.save((err) => {
+				if (err) {
+					console.error("❌ Session save error:", err);
+					return res.status(500).json({ error: "Session save failed" });
+				}
+				console.log("✅ Login successful for user:", user[0].username);
+				console.log("✅ Session saved with user_id:", user[0].user_id);
+				res.json(user[0]); // Return user object directly to match frontend expectations
+			});
 		} else {
 			console.log("❌ User not found:", loginIdentifier);
 			res.status(401).json({ error: "User not found" });
