@@ -31,9 +31,34 @@ const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps> = ({
 		return `${(score / 5) * 100}%`;
 	};
 
+	const getStrengthLabel = (score: number) => {
+		if (score <= 1) return "Very Weak";
+		if (score <= 2) return "Weak";
+		if (score <= 3) return "Fair";
+		if (score <= 4) return "Good";
+		return "Strong";
+	};
+
 	return (
-		<div className="password-strength">
-			<div className="password-strength__bar">
+		<div
+			className="password-strength"
+			role="group"
+			aria-labelledby="password-strength-label"
+		>
+			<div id="password-strength-label" className="sr-only">
+				Password strength indicator and requirements
+			</div>
+
+			<div
+				className="password-strength__bar"
+				role="progressbar"
+				aria-valuenow={score}
+				aria-valuemin={0}
+				aria-valuemax={5}
+				aria-label={`Password strength: ${getStrengthLabel(
+					score
+				)} (${score} out of 5)`}
+			>
 				<div
 					className="password-strength__fill"
 					style={{
@@ -43,50 +68,111 @@ const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps> = ({
 						borderRadius: "2px",
 						transition: "all 0.3s ease",
 					}}
+					aria-hidden="true"
 				/>
 			</div>
 
-			<div className="password-strength__feedback">
-				<span style={{ color: getStrengthColor(score), fontSize: "0.8rem" }}>
+			<div
+				className="password-strength__feedback"
+				aria-live="polite"
+				aria-atomic="true"
+			>
+				<span
+					style={{ color: getStrengthColor(score), fontSize: "0.8rem" }}
+					aria-label={`Password strength level: ${feedback}`}
+				>
 					{feedback}
 				</span>
 			</div>
 
 			{showRequirements && (
-				<div className="password-requirements">
-					<div className="password-requirements__title">
+				<div
+					className="password-requirements"
+					role="group"
+					aria-labelledby="requirements-heading"
+				>
+					<div
+						id="requirements-heading"
+						className="password-requirements__title"
+					>
 						Password Requirements:
 					</div>
-					<ul className="password-requirements__list">
+					<ul className="password-requirements__list" role="list">
 						<li
 							className={requirements.length ? "valid" : "invalid"}
 							style={{ color: requirements.length ? "#2ed573" : "#ff4757" }}
+							role="listitem"
+							aria-describedby="req-length"
 						>
-							✓ At least 8 characters
+							<span aria-hidden="true">{requirements.length ? "✓" : "✗"}</span>
+							<span id="req-length">At least 8 characters</span>
+							<span className="sr-only">
+								{requirements.length
+									? "Requirement met"
+									: "Requirement not met"}
+							</span>
 						</li>
 						<li
 							className={requirements.uppercase ? "valid" : "invalid"}
 							style={{ color: requirements.uppercase ? "#2ed573" : "#ff4757" }}
+							role="listitem"
+							aria-describedby="req-uppercase"
 						>
-							✓ One uppercase letter
+							<span aria-hidden="true">
+								{requirements.uppercase ? "✓" : "✗"}
+							</span>
+							<span id="req-uppercase">One uppercase letter</span>
+							<span className="sr-only">
+								{requirements.uppercase
+									? "Requirement met"
+									: "Requirement not met"}
+							</span>
 						</li>
 						<li
 							className={requirements.lowercase ? "valid" : "invalid"}
 							style={{ color: requirements.lowercase ? "#2ed573" : "#ff4757" }}
+							role="listitem"
+							aria-describedby="req-lowercase"
 						>
-							✓ One lowercase letter
+							<span aria-hidden="true">
+								{requirements.lowercase ? "✓" : "✗"}
+							</span>
+							<span id="req-lowercase">One lowercase letter</span>
+							<span className="sr-only">
+								{requirements.lowercase
+									? "Requirement met"
+									: "Requirement not met"}
+							</span>
 						</li>
 						<li
 							className={requirements.number ? "valid" : "invalid"}
 							style={{ color: requirements.number ? "#2ed573" : "#ff4757" }}
+							role="listitem"
+							aria-describedby="req-number"
 						>
-							✓ One number
+							<span aria-hidden="true">{requirements.number ? "✓" : "✗"}</span>
+							<span id="req-number">One number</span>
+							<span className="sr-only">
+								{requirements.number
+									? "Requirement met"
+									: "Requirement not met"}
+							</span>
 						</li>
 						<li
 							className={requirements.special ? "valid" : "invalid"}
 							style={{ color: requirements.special ? "#2ed573" : "#ff4757" }}
+							role="listitem"
+							aria-describedby="req-special"
 						>
-							✓ One special character (!@#$%^&*(),.?":{}|{`<>`})
+							<span aria-hidden="true">{requirements.special ? "✓" : "✗"}</span>
+							<span id="req-special">
+								One special character (!@#$%^&*(),.?":{}|{`<>`})
+							</span>
+							<span className="sr-only">
+								{requirements.special
+									? "Requirement met"
+									: "Requirement not met"}
+							</span>
 						</li>
 					</ul>
 				</div>

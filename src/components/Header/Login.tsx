@@ -239,6 +239,10 @@ const Login: React.FC = () => {
 				autoClose={6000}
 				position="top-center"
 				transition={Slide}
+				role="alert"
+				aria-live="assertive"
+				aria-atomic="true"
+				toastClassName="accessible-toast"
 			/>
 			<div className="auth-container">
 				<div className="auth-container__login-register">
@@ -248,34 +252,100 @@ const Login: React.FC = () => {
 								e.preventDefault();
 								login();
 							}}
+							aria-labelledby="login-heading"
+							role="main"
 						>
-							<h3>login</h3>
-							<label htmlFor="loginEmail">email:</label>
-							<input
-								id="loginEmail"
-								value={userCreds}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setUserCreds(e.target.value)
-								}
-							/>
-							<br></br>
-							<label htmlFor="loginPassword">password:</label>
-							<input
-								type="password"
-								id="loginPassword"
-								value={loginPassword}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setLoginPassword(e.target.value)
-								}
-							/>
-							<br></br>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading ? "Logging in..." : "login"}
-							</Button>
-							<br />
-							<Button type="button" onClick={toggleLogin}>
-								register
-							</Button>
+							<h3 id="login-heading">Sign In to Your Account</h3>
+							<div className="form-group">
+								<label htmlFor="loginEmail" className="form-label">
+									Email or Username
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									id="loginEmail"
+									type="text"
+									autoComplete="username"
+									value={userCreds}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										setUserCreds(e.target.value)
+									}
+									className="form-input"
+									placeholder="Enter your email or username"
+									aria-describedby="loginEmail-help"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+								<div id="loginEmail-help" className="input-help">
+									Enter the email address or username associated with your
+									account
+								</div>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="loginPassword" className="form-label">
+									Password
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									type="password"
+									id="loginPassword"
+									autoComplete="current-password"
+									value={loginPassword}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										setLoginPassword(e.target.value)
+									}
+									className="form-input"
+									placeholder="Enter your password"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+							</div>
+
+							<div className="form-actions">
+								<Button
+									type="submit"
+									variant="primary"
+									loading={isLoading}
+									disabled={isLoading}
+									aria-describedby={isLoading ? "login-status" : undefined}
+								>
+									Sign In
+								</Button>
+								{isLoading && (
+									<div
+										id="login-status"
+										className="sr-only"
+										role="status"
+										aria-live="polite"
+									>
+										Signing you in, please wait...
+									</div>
+								)}
+							</div>
+
+							<div className="form-footer">
+								<Button
+									type="button"
+									variant="link"
+									onClick={toggleLogin}
+									aria-describedby="register-help"
+								>
+									Create New Account
+								</Button>
+								<div id="register-help" className="sr-only">
+									Switch to account registration form
+								</div>
+							</div>
 						</form>
 					) : (
 						<form
@@ -283,106 +353,281 @@ const Login: React.FC = () => {
 								e.preventDefault();
 								register();
 							}}
+							aria-labelledby="register-heading"
+							role="main"
 						>
-							<h3>register</h3>
-							<label htmlFor="username">username:</label>
-							<input
-								id="username"
-								value={username}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setUsername(e.target.value)
-								}
-							/>
-							<br></br>
-							<label htmlFor="firstName">first name:</label>
-							<input
-								id="firstName"
-								value={firstName}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setFirstName(e.target.value)
-								}
-							/>
-							<br></br>
-							<label htmlFor="lastName">last name:</label>
-							<input
-								id="lastName"
-								value={lastName}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setLastName(e.target.value)
-								}
-							/>
-							<br></br>
-							<label htmlFor="email">email:</label>
-							<input
-								id="email"
-								value={email}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									setEmail(e.target.value)
-								}
-							/>
-							<br></br>
-							<label htmlFor="password">password:</label>
-							<input
-								type="password"
-								id="password"
-								value={password}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-									handlePasswordChange(e.target.value)
-								}
-								aria-describedby="password-strength"
-							/>
-							{password && (
-								<div id="password-strength" style={{ marginTop: "8px" }}>
-									<PasswordStrengthIndicator
-										score={passwordStrength.score}
-										feedback={passwordStrength.feedback}
-										requirements={passwordStrength.requirements}
-										showRequirements={true}
-									/>
+							<h3 id="register-heading">Create Your Account</h3>
+
+							<div className="form-group">
+								<label htmlFor="username" className="form-label">
+									Username
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									id="username"
+									type="text"
+									autoComplete="username"
+									value={username}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										setUsername(e.target.value)
+									}
+									className="form-input"
+									placeholder="Choose a unique username"
+									aria-describedby="username-help"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+								<div id="username-help" className="input-help">
+									3-20 characters, letters, numbers, and underscores only
 								</div>
-							)}
-							<br></br>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading ? "Creating Account..." : "register"}
-							</Button>
-							<div className="auth-container__already-registered">
-								<span className="clickable" onClick={toggleLogin}>
-									already register?
-								</span>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="firstName" className="form-label">
+									First Name
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									id="firstName"
+									type="text"
+									autoComplete="given-name"
+									value={firstName}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										setFirstName(e.target.value)
+									}
+									className="form-input"
+									placeholder="Enter your first name"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="lastName" className="form-label">
+									Last Name
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									id="lastName"
+									type="text"
+									autoComplete="family-name"
+									value={lastName}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										setLastName(e.target.value)
+									}
+									className="form-input"
+									placeholder="Enter your last name"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="email" className="form-label">
+									Email Address
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									id="email"
+									type="email"
+									autoComplete="email"
+									value={email}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										setEmail(e.target.value)
+									}
+									className="form-input"
+									placeholder="Enter your email address"
+									aria-describedby="email-help"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+								<div id="email-help" className="input-help">
+									We'll use this to send you account updates and password resets
+								</div>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="password" className="form-label">
+									Password
+									<span
+										className="required-indicator"
+										aria-label="required field"
+									>
+										*
+									</span>
+								</label>
+								<input
+									type="password"
+									id="password"
+									autoComplete="new-password"
+									value={password}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+										handlePasswordChange(e.target.value)
+									}
+									className="form-input"
+									placeholder="Create a strong password"
+									aria-describedby="password-strength password-requirements"
+									aria-required="true"
+									disabled={isLoading}
+								/>
+								{password && (
+									<div id="password-strength" style={{ marginTop: "8px" }}>
+										<PasswordStrengthIndicator
+											score={passwordStrength.score}
+											feedback={passwordStrength.feedback}
+											requirements={passwordStrength.requirements}
+											showRequirements={true}
+										/>
+									</div>
+								)}
+								<div id="password-requirements" className="input-help">
+									Password must be at least 8 characters with uppercase,
+									lowercase, and numbers
+								</div>
+							</div>
+
+							<div className="form-actions">
+								<Button
+									type="submit"
+									variant="primary"
+									loading={isLoading}
+									disabled={isLoading}
+									aria-describedby={isLoading ? "register-status" : undefined}
+								>
+									Create Account
+								</Button>
+								{isLoading && (
+									<div
+										id="register-status"
+										className="sr-only"
+										role="status"
+										aria-live="polite"
+									>
+										Creating your account, please wait...
+									</div>
+								)}
+							</div>
+
+							<div className="form-footer">
+								<Button
+									type="button"
+									variant="link"
+									onClick={toggleLogin}
+									aria-describedby="login-help"
+								>
+									Already have an account? Sign in
+								</Button>
+								<div id="login-help" className="sr-only">
+									Switch to sign in form
+								</div>
 							</div>
 						</form>
 					)}
 					<div className="auth-container__reset-password">
-						{resetDisabler ? (
-							<span
-								className="clickable"
-								onClick={() => setResetDisabler(!resetDisabler)}
-							>
-								reset password
-							</span>
-						) : (
-							<>
-								<input
-									value={resetEmail}
-									id="passwordResetRequest"
-									placeholder="email"
-									disabled={resetDisabler}
-									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-										setResetEmail(e.target.value)
-									}
-								></input>
-								<br />
+						<fieldset aria-labelledby="reset-legend">
+							<legend id="reset-legend" className="sr-only">
+								Password Reset Section
+							</legend>
+							{resetDisabler ? (
 								<Button
-									className="auth-container__reset-button"
-									onClick={() => submitResetReq()}
+									type="button"
+									variant="link"
+									onClick={() => setResetDisabler(!resetDisabler)}
+									aria-expanded="false"
+									aria-controls="reset-form"
+									aria-describedby="reset-help"
 								>
-									request reset
+									Forgot your password?
 								</Button>
-								<Button onClick={() => setResetDisabler(!resetDisabler)}>
-									cancel
-								</Button>
-							</>
-						)}
+							) : (
+								<div
+									id="reset-form"
+									role="group"
+									aria-labelledby="reset-form-heading"
+								>
+									<h4 id="reset-form-heading" className="sr-only">
+										Reset Password Form
+									</h4>
+									<div className="form-group">
+										<label
+											htmlFor="passwordResetRequest"
+											className="form-label"
+										>
+											Email Address for Password Reset
+											<span
+												className="required-indicator"
+												aria-label="required field"
+											>
+												*
+											</span>
+										</label>
+										<input
+											value={resetEmail}
+											id="passwordResetRequest"
+											type="email"
+											autoComplete="email"
+											placeholder="Enter your email address"
+											disabled={resetDisabler}
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+												setResetEmail(e.target.value)
+											}
+											className="form-input"
+											aria-describedby="reset-email-help"
+											aria-required="true"
+										/>
+										<div id="reset-email-help" className="input-help">
+											We'll send password reset instructions to this email
+										</div>
+									</div>
+
+									<div className="form-actions">
+										<Button
+											type="button"
+											variant="primary"
+											onClick={() => submitResetReq()}
+											aria-describedby="reset-submit-help"
+										>
+											Send Reset Email
+										</Button>
+										<Button
+											type="button"
+											variant="secondary"
+											onClick={() => setResetDisabler(!resetDisabler)}
+											aria-expanded="true"
+											aria-controls="reset-form"
+										>
+											Cancel
+										</Button>
+										<div id="reset-submit-help" className="sr-only">
+											Submit password reset request
+										</div>
+									</div>
+								</div>
+							)}
+							<div id="reset-help" className="sr-only">
+								Expand password reset form to recover your account
+							</div>
+						</fieldset>
 					</div>
 				</div>
 			</div>

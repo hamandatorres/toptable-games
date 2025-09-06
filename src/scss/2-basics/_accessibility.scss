@@ -1,0 +1,354 @@
+/**
+ * Accessibility Styles
+ * WCAG 2.1 AA compliant styles for better user experience
+ */
+
+/* Screen Reader Only Text */
+.sr-only {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	padding: 0 !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	clip: rect(0, 0, 0, 0) !important;
+	white-space: nowrap !important;
+	border: 0 !important;
+}
+
+/* Show screen reader text when focused (for skip links) */
+.sr-only:focus {
+	position: static !important;
+	width: auto !important;
+	height: auto !important;
+	padding: 0.5rem !important;
+	margin: 0 !important;
+	overflow: visible !important;
+	clip: auto !important;
+	white-space: normal !important;
+	background-color: var(--color-primary, #007bff) !important;
+	color: white !important;
+	border-radius: 4px !important;
+	z-index: 9999 !important;
+}
+
+/* Skip Links */
+.skip-link {
+	position: absolute;
+	top: -40px;
+	left: 6px;
+	background: var(--color-primary, #007bff);
+	color: white;
+	padding: 8px;
+	text-decoration: none;
+	border-radius: 4px;
+	z-index: 10000;
+	transition: top 0.3s ease;
+
+	&:focus {
+		top: 6px;
+	}
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+	.form-input,
+	.form-label,
+	.primary-button,
+	.secondary-button {
+		border: 2px solid currentColor;
+	}
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* Focus Management */
+.focus-trap {
+	/* Ensure focus remains within modal/dialog */
+	position: relative;
+}
+
+/* Enhanced Focus Indicators */
+:focus-visible {
+	outline: 3px solid var(--color-focus, #005fcc);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Remove default focus for mouse users */
+:focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* Form Accessibility Styles */
+.form-group {
+	margin-bottom: 1.5rem;
+	position: relative;
+}
+
+.form-label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	color: var(--color-text-primary, #212529);
+	font-size: 1rem;
+	line-height: 1.5;
+
+	/* Ensure labels are associated with inputs */
+	cursor: pointer;
+}
+
+.required-indicator {
+	color: var(--color-error, #dc3545);
+	font-weight: bold;
+	margin-left: 0.25rem;
+}
+
+.form-input {
+	width: 100%;
+	padding: 0.75rem;
+	border: 2px solid var(--color-border, #ced4da);
+	border-radius: 4px;
+	font-size: 1rem;
+	line-height: 1.5;
+	background-color: var(--color-input-bg, #fff);
+	color: var(--color-text-primary, #212529);
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+	&:focus {
+		border-color: var(--color-primary, #007bff);
+		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+		outline: none;
+	}
+
+	&:invalid {
+		border-color: var(--color-error, #dc3545);
+	}
+
+	&:disabled {
+		background-color: var(--color-disabled-bg, #e9ecef);
+		color: var(--color-disabled-text, #6c757d);
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+
+	&::placeholder {
+		color: var(--color-placeholder, #6c757d);
+		opacity: 1;
+	}
+}
+
+.input-help {
+	font-size: 0.875rem;
+	color: var(--color-text-secondary, #6c757d);
+	margin-top: 0.25rem;
+	line-height: 1.4;
+}
+
+/* Button Accessibility */
+.primary-button,
+.secondary-button,
+.link-button {
+	padding: 0.75rem 1.5rem;
+	border-radius: 4px;
+	font-size: 1rem;
+	font-weight: 500;
+	line-height: 1.5;
+	text-align: center;
+	cursor: pointer;
+	border: 2px solid transparent;
+	transition: all 0.15s ease-in-out;
+	text-decoration: none;
+	display: inline-block;
+	min-width: 120px;
+
+	&:focus {
+		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+		outline: none;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.65;
+		pointer-events: none;
+	}
+}
+
+.primary-button {
+	background-color: var(--color-primary, #007bff);
+	color: white;
+	border-color: var(--color-primary, #007bff);
+
+	&:hover:not(:disabled) {
+		background-color: var(--color-primary-dark, #0056b3);
+		border-color: var(--color-primary-dark, #0056b3);
+	}
+
+	&:active:not(:disabled) {
+		background-color: var(--color-primary-darker, #004085);
+		border-color: var(--color-primary-darker, #004085);
+	}
+}
+
+.secondary-button {
+	background-color: transparent;
+	color: var(--color-primary, #007bff);
+	border-color: var(--color-primary, #007bff);
+
+	&:hover:not(:disabled) {
+		background-color: var(--color-primary, #007bff);
+		color: white;
+	}
+
+	&:active:not(:disabled) {
+		background-color: var(--color-primary-dark, #0056b3);
+		border-color: var(--color-primary-dark, #0056b3);
+		color: white;
+	}
+}
+
+.link-button {
+	background: none;
+	border: none;
+	color: var(--color-link, #007bff);
+	text-decoration: underline;
+	padding: 0.5rem;
+	min-width: auto;
+
+	&:hover:not(:disabled) {
+		color: var(--color-link-hover, #0056b3);
+		text-decoration: none;
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+		border-radius: 2px;
+	}
+}
+
+/* Form Actions Layout */
+.form-actions {
+	margin-top: 1.5rem;
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.form-footer {
+	margin-top: 1rem;
+	text-align: center;
+	padding-top: 1rem;
+	border-top: 1px solid var(--color-border-light, #e9ecef);
+}
+
+/* Status and Loading Indicators */
+[role="status"] {
+	/* Ensure status messages are announced by screen readers */
+	position: relative;
+}
+
+.loading-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+
+	&::before {
+		content: "";
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid currentColor;
+		border-top-color: transparent;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+	}
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Error States */
+.error-message {
+	color: var(--color-error, #dc3545);
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+
+	&::before {
+		content: "⚠";
+		font-weight: bold;
+	}
+}
+
+/* Success States */
+.success-message {
+	color: var(--color-success, #28a745);
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+
+	&::before {
+		content: "✓";
+		font-weight: bold;
+	}
+}
+
+/* Fieldset and Legend Styling */
+fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+legend {
+	font-weight: 600;
+	margin-bottom: 1rem;
+	padding: 0;
+}
+
+/* Dark Mode Accessibility */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-text-primary: #f8f9fa;
+		--color-text-secondary: #adb5bd;
+		--color-input-bg: #495057;
+		--color-border: #6c757d;
+		--color-border-light: #495057;
+		--color-disabled-bg: #343a40;
+		--color-disabled-text: #6c757d;
+		--color-placeholder: #adb5bd;
+	}
+}
+
+/* Print Styles */
+@media print {
+	.skip-link,
+	.sr-only {
+		display: none !important;
+	}
+
+	.form-input,
+	.primary-button,
+	.secondary-button {
+		border: 1px solid #000 !important;
+		background: white !important;
+		color: black !important;
+	}
+}

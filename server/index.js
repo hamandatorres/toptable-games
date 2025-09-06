@@ -122,6 +122,7 @@ app.delete("/api/user/delete", authMiddleware.authorize, userInfo.deleteUser);
 
 // Password Reset Endpoints
 app.put("/api/pwdReset/req", passwordReset.resetPwdEmail);
+app.get("/api/pwdReset/validate/:token", passwordReset.validateToken);
 app.put("/api/pwdReset/submit/:token", passwordReset.processReset);
 // //Player endpoints
 // Item Display //User Graph
