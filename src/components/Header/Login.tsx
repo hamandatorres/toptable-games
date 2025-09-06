@@ -7,9 +7,7 @@ import { ToastContainer, toast, Slide } from "react-toastify";
 import { getUserGames } from "../../redux/userGameReducer";
 import { updateUser, User } from "../../redux/userReducer";
 import Button from "../StyledComponents/Button";
-import {
-	usePasswordValidation,
-} from "../../hooks/useFormValidation";
+import { usePasswordValidation } from "../../hooks/useFormValidation";
 import PasswordStrengthIndicator from "../StyledComponents/PasswordStrengthIndicator";
 
 const Login: React.FC = () => {
