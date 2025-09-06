@@ -11,6 +11,13 @@ const SQLSecurityMiddleware = require("./middleware/sqlSecurityMiddleware");
 
 // Controller imports
 const authMiddleware = require("./middleware/authMiddleware");
+const {
+	enhancedAuthRateLimit,
+	accountLockoutMiddleware,
+	detectSuspiciousActivity,
+	passwordResetRateLimit,
+	createApiRateLimit,
+} = require("./middleware/enhancedRateLimiting");
 const auth = require("./controllers/authController");
 const game = require("./controllers/gameController");
 const player = require("./controllers/playerController");
@@ -35,6 +42,10 @@ if (config.nodeEnv === "production") {
 // JSON parsing with security
 app.use(express.json({ limit: "10mb" }));
 
+// Enhanced rate limiting and suspicious activity detection
+app.use(createApiRateLimit(100)); // 100 requests per 15 minutes
+app.use(detectSuspiciousActivity);
+
 // Serve static files from Vite build
 if (config.nodeEnv === "production") {
 	app.use(express.static(path.join(__dirname, "../dist")));
@@ -53,11 +64,14 @@ app.get("/api/health", SecurityConfig.healthCheck);
 //Auth endpoints with security middleware
 app.post(
 	"/api/auth/register",
+	enhancedAuthRateLimit,
 	SQLSecurityMiddleware.auditLog("user_register"),
 	auth.register
 );
 app.post(
 	"/api/auth/login",
+	accountLockoutMiddleware,
+	enhancedAuthRateLimit,
 	SQLSecurityMiddleware.auditLog("user_login"),
 	auth.login
 );

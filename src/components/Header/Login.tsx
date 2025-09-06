@@ -8,6 +8,7 @@ import { getUserGames } from "../../redux/userGameReducer";
 import { updateUser, User } from "../../redux/userReducer";
 import Button from "../StyledComponents/Button";
 import { usePasswordValidation } from "../../hooks/useFormValidation";
+import { useFormValidation } from "../../hooks/useInputValidation";
 import PasswordStrengthIndicator from "../StyledComponents/PasswordStrengthIndicator";
 
 const Login: React.FC = () => {
@@ -29,6 +30,9 @@ const Login: React.FC = () => {
 	// Password validation hook
 	const { validatePassword, passwordStrength } = usePasswordValidation();
 
+	// Form validation hook
+	const { validateRegistrationForm, validateLoginForm } = useFormValidation();
+
 	const toggleLogin = (): void => {
 		setIsLogin(!isLogin);
 	};
@@ -39,28 +43,27 @@ const Login: React.FC = () => {
 	};
 
 	const register = (): void => {
-		// Validate password before submitting
+		// Comprehensive form validation
+		const formValidation = validateRegistrationForm({
+			email: email.trim(),
+			username: username.trim(),
+			firstName: firstName.trim(),
+			lastName: lastName.trim(),
+			password,
+		});
+
+		// Show validation errors
+		if (!formValidation.isValid) {
+			Object.values(formValidation.errors).forEach((error) => {
+				toast.error(error);
+			});
+			return;
+		}
+
+		// Validate password strength
 		const passwordValidation = validatePassword(password);
 		if (!passwordValidation.isValid) {
 			toast.error(passwordValidation.message);
-			return;
-		}
-
-		// Validate other required fields
-		if (
-			!username.trim() ||
-			!firstName.trim() ||
-			!lastName.trim() ||
-			!email.trim()
-		) {
-			toast.error("Please fill in all required fields");
-			return;
-		}
-
-		// Basic email validation
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(email)) {
-			toast.error("Please enter a valid email address");
 			return;
 		}
 
@@ -69,8 +72,8 @@ const Login: React.FC = () => {
 		axios
 			.post<User>("/api/auth/register", {
 				username: username.trim(),
-				firstName: firstName.trim(),
-				lastName: lastName.trim(),
+				first_name: firstName.trim(),
+				last_name: lastName.trim(),
 				email: email.trim(),
 				password,
 			})
@@ -114,12 +117,25 @@ const Login: React.FC = () => {
 					);
 				} else if (errorData?.error === "invalid_password") {
 					toast.error(
-						errorData.message || "Password does not meet security requirements."
+						errorData.message || "Password does not meet requirements"
 					);
-				} else if (errorData?.error === "incomplete") {
-					toast.error("Please fill in all required fields.");
+				} else if (errorData?.error === "invalid_input") {
+					// Show all backend validation errors
+					if (errorData.errors && Array.isArray(errorData.errors)) {
+						errorData.errors.forEach((error: string) => toast.error(error));
+					} else {
+						toast.error(
+							errorData.message || "Please check your input and try again"
+						);
+					}
+				} else if (errorData?.error === "rate_limit_exceeded") {
+					toast.error(
+						errorData.message || "Too many attempts. Please try again later."
+					);
 				} else {
-					toast.error("Unable to create account. Please try again later.");
+					toast.error(
+						errorData?.message || "Registration failed. Please try again."
+					);
 				}
 			})
 			.finally(() => {
@@ -128,8 +144,16 @@ const Login: React.FC = () => {
 	};
 
 	const login = (): void => {
-		if (!userCreds.trim() || !loginPassword.trim()) {
-			toast.error("Please enter your email/username and password");
+		// Validate login form
+		const formValidation = validateLoginForm({
+			userCreds: userCreds.trim(),
+			password: loginPassword,
+		});
+
+		if (!formValidation.isValid) {
+			Object.values(formValidation.errors).forEach((error) => {
+				toast.error(error);
+			});
 			return;
 		}
 
@@ -141,7 +165,7 @@ const Login: React.FC = () => {
 				password: loginPassword,
 			})
 			.then((res) => {
-				const user = res.data;
+				const user = res.data.user || res.data; // Handle both response formats
 				setUserCreds("");
 				setLoginPassword("");
 				dispatch(updateUser(user));
@@ -153,16 +177,41 @@ const Login: React.FC = () => {
 				console.error("Login error:", err);
 				const errorData = err.response?.data;
 
-				if (errorData === "userCreds" || err.response?.status === 404) {
+				if (
+					errorData?.error === "user_not_found" ||
+					err.response?.status === 404
+				) {
 					toast.error(
 						"No account found with this email or username. Please check your credentials or create a new account."
 					);
-				} else if (errorData === "password" || err.response?.status === 403) {
+				} else if (
+					errorData?.error === "invalid_password" ||
+					err.response?.status === 403
+				) {
 					toast.error("Incorrect password. Please try again.");
-				} else if (errorData === "incomplete" || err.response?.status === 400) {
-					toast.error("Please enter both email/username and password.");
+				} else if (errorData?.error === "invalid_input") {
+					// Show all backend validation errors
+					if (errorData.errors && Array.isArray(errorData.errors)) {
+						errorData.errors.forEach((error: string) => toast.error(error));
+					} else {
+						toast.error(
+							errorData.message || "Please check your input and try again"
+						);
+					}
+				} else if (errorData?.error === "rate_limit_exceeded") {
+					toast.error(
+						errorData.message ||
+							"Too many login attempts. Please try again later."
+					);
+				} else if (errorData === "userCreds" || errorData === "password") {
+					// Handle legacy error responses
+					if (errorData === "userCreds") {
+						toast.error("No account found with this email or username.");
+					} else {
+						toast.error("Incorrect password. Please try again.");
+					}
 				} else {
-					toast.error("Unable to log in. Please try again later.");
+					toast.error(errorData?.message || "Login failed. Please try again.");
 				}
 			})
 			.finally(() => {
