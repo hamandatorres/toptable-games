@@ -221,7 +221,19 @@ export class MockGameService {
 		mechanics: string[] = [],
 		categories: string[] = [],
 		skip: number = 0,
-		limit: number = 20
+		limit: number = 20,
+		filters?: {
+			minPlayers?: number | null;
+			maxPlayers?: number | null;
+			minAge?: number | null;
+			maxAge?: number | null;
+			minYear?: number | null;
+			maxYear?: number | null;
+			minRating?: number | null;
+			maxRating?: number | null;
+			sortBy?: string;
+			sortOrder?: "asc" | "desc";
+		}
 	): Promise<{ games: ThumbGame[] }> {
 		// Simulate API delay
 		await new Promise((resolve) => setTimeout(resolve, 300));
@@ -247,6 +259,100 @@ export class MockGameService {
 			filteredGames = filteredGames.filter((game) =>
 				game.categories?.some((cat) => categories.includes(cat.id))
 			);
+		}
+
+		// Apply advanced filters if provided
+		if (filters) {
+			if (filters.minPlayers !== null && filters.minPlayers !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.min_players ? game.min_players >= filters.minPlayers! : true
+				);
+			}
+
+			if (filters.maxPlayers !== null && filters.maxPlayers !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.max_players ? game.max_players <= filters.maxPlayers! : true
+				);
+			}
+
+			if (filters.minAge !== null && filters.minAge !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.min_age ? game.min_age >= filters.minAge! : true
+				);
+			}
+
+			if (filters.maxAge !== null && filters.maxAge !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.min_age ? game.min_age <= filters.maxAge! : true
+				);
+			}
+
+			if (filters.minYear !== null && filters.minYear !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.year_published ? game.year_published >= filters.minYear! : true
+				);
+			}
+
+			if (filters.maxYear !== null && filters.maxYear !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.year_published ? game.year_published <= filters.maxYear! : true
+				);
+			}
+
+			if (filters.minRating !== null && filters.minRating !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.avgRating ? game.avgRating >= filters.minRating! : true
+				);
+			}
+
+			if (filters.maxRating !== null && filters.maxRating !== undefined) {
+				filteredGames = filteredGames.filter((game) =>
+					game.avgRating ? game.avgRating <= filters.maxRating! : true
+				);
+			}
+
+			// Apply sorting
+			if (filters.sortBy) {
+				filteredGames.sort((a, b) => {
+					let aValue: string | number, bValue: string | number;
+
+					switch (filters.sortBy) {
+						case "name":
+							aValue = a.name;
+							bValue = b.name;
+							break;
+						case "rating":
+							aValue = a.avgRating || 0;
+							bValue = b.avgRating || 0;
+							break;
+						case "year":
+							aValue = a.year_published || 0;
+							bValue = b.year_published || 0;
+							break;
+						case "players":
+							aValue = a.max_players || 0;
+							bValue = b.max_players || 0;
+							break;
+						case "age":
+							aValue = a.min_age || 0;
+							bValue = b.min_age || 0;
+							break;
+						default:
+							aValue = a.name;
+							bValue = b.name;
+					}
+
+					if (typeof aValue === "string") {
+						return filters.sortOrder === "asc"
+							? aValue.localeCompare(bValue as string)
+							: (bValue as string).localeCompare(aValue);
+					} else {
+						return filters.sortOrder === "asc"
+							? (aValue as number) - (bValue as number)
+							: (bValue as number) - (aValue as number);
+					}
+				});
+			}
 		}
 
 		// Apply pagination
