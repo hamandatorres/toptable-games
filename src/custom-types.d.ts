@@ -23,6 +23,13 @@ declare module "customTypes" {
 		name: string;
 		thumb_url: string;
 		avgRating: number;
+		description?: string | undefined;
+		year_published?: number | undefined;
+		min_players?: number | undefined;
+		max_players?: number | undefined;
+		min_age?: number | undefined;
+		mechanics?: Array<{ id: string; name: string; url: string }> | undefined;
+		categories?: Array<{ id: string; name: string; url: string }> | undefined;
 	};
 
 	export type PlayerCount = {

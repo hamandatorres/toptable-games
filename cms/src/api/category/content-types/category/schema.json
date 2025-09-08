@@ -1,0 +1,36 @@
+{
+	"kind": "collectionType",
+	"collectionName": "categories",
+	"info": {
+		"singularName": "category",
+		"pluralName": "categories",
+		"displayName": "Game Category",
+		"description": "Board game categories"
+	},
+	"options": {
+		"draftAndPublish": false
+	},
+	"pluginOptions": {},
+	"attributes": {
+		"name": {
+			"type": "string",
+			"required": true,
+			"unique": true
+		},
+		"description": {
+			"type": "text"
+		},
+		"icon": {
+			"type": "media",
+			"multiple": false,
+			"required": false,
+			"allowedTypes": ["images"]
+		},
+		"games": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::game.game",
+			"mappedBy": "categories"
+		}
+	}
+}

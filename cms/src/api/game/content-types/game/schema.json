@@ -1,0 +1,110 @@
+{
+	"kind": "collectionType",
+	"collectionName": "games",
+	"info": {
+		"singularName": "game",
+		"pluralName": "games",
+		"displayName": "Game",
+		"description": "Board game information"
+	},
+	"options": {
+		"draftAndPublish": true
+	},
+	"pluginOptions": {},
+	"attributes": {
+		"name": {
+			"type": "string",
+			"required": true,
+			"unique": true
+		},
+		"description": {
+			"type": "richtext"
+		},
+		"year_published": {
+			"type": "integer",
+			"min": 1800,
+			"max": 2030
+		},
+		"min_players": {
+			"type": "integer",
+			"min": 1,
+			"max": 20
+		},
+		"max_players": {
+			"type": "integer",
+			"min": 1,
+			"max": 20
+		},
+		"min_age": {
+			"type": "integer",
+			"min": 3,
+			"max": 99
+		},
+		"playtime_min": {
+			"type": "integer",
+			"min": 1,
+			"max": 1440
+		},
+		"playtime_max": {
+			"type": "integer",
+			"min": 1,
+			"max": 1440
+		},
+		"complexity": {
+			"type": "decimal",
+			"min": 1,
+			"max": 5
+		},
+		"avgRating": {
+			"type": "decimal",
+			"min": 0,
+			"max": 5
+		},
+		"thumb_url": {
+			"type": "string"
+		},
+		"thumbnail": {
+			"type": "media",
+			"multiple": false,
+			"required": false,
+			"allowedTypes": ["images"]
+		},
+		"image_gallery": {
+			"type": "media",
+			"multiple": true,
+			"required": false,
+			"allowedTypes": ["images"]
+		},
+		"bgg_id": {
+			"type": "integer",
+			"unique": true
+		},
+		"mechanics": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::mechanic.mechanic",
+			"mappedBy": "games"
+		},
+		"categories": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::category.category",
+			"mappedBy": "games"
+		},
+		"designers": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::designer.designer",
+			"mappedBy": "games"
+		},
+		"publishers": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::publisher.publisher",
+			"mappedBy": "games"
+		},
+		"honors": {
+			"type": "json"
+		}
+	}
+}

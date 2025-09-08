@@ -1,0 +1,36 @@
+{
+	"kind": "collectionType",
+	"collectionName": "mechanics",
+	"info": {
+		"singularName": "mechanic",
+		"pluralName": "mechanics",
+		"displayName": "Game Mechanic",
+		"description": "Board game mechanics"
+	},
+	"options": {
+		"draftAndPublish": false
+	},
+	"pluginOptions": {},
+	"attributes": {
+		"name": {
+			"type": "string",
+			"required": true,
+			"unique": true
+		},
+		"description": {
+			"type": "text"
+		},
+		"icon": {
+			"type": "media",
+			"multiple": false,
+			"required": false,
+			"allowedTypes": ["images"]
+		},
+		"games": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::game.game",
+			"mappedBy": "mechanics"
+		}
+	}
+}

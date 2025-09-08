@@ -59,6 +59,7 @@
 		"isomorphic-dompurify": "^2.26.0",
 		"massive": "^6.11.3",
 		"memorystore": "^1.6.7",
+		"node-fetch": "^3.3.2",
 		"nodemailer": "^6.9.8",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",

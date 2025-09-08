@@ -1,0 +1,39 @@
+{
+	"kind": "collectionType",
+	"collectionName": "designers",
+	"info": {
+		"singularName": "designer",
+		"pluralName": "designers",
+		"displayName": "Game Designer",
+		"description": "Board game designers"
+	},
+	"options": {
+		"draftAndPublish": false
+	},
+	"pluginOptions": {},
+	"attributes": {
+		"name": {
+			"type": "string",
+			"required": true,
+			"unique": true
+		},
+		"bio": {
+			"type": "text"
+		},
+		"photo": {
+			"type": "media",
+			"multiple": false,
+			"required": false,
+			"allowedTypes": ["images"]
+		},
+		"website": {
+			"type": "string"
+		},
+		"games": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::game.game",
+			"mappedBy": "designers"
+		}
+	}
+}

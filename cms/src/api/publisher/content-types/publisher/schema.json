@@ -1,0 +1,44 @@
+{
+	"kind": "collectionType",
+	"collectionName": "publishers",
+	"info": {
+		"singularName": "publisher",
+		"pluralName": "publishers",
+		"displayName": "Game Publisher",
+		"description": "Board game publishers"
+	},
+	"options": {
+		"draftAndPublish": false
+	},
+	"pluginOptions": {},
+	"attributes": {
+		"name": {
+			"type": "string",
+			"required": true,
+			"unique": true
+		},
+		"description": {
+			"type": "text"
+		},
+		"logo": {
+			"type": "media",
+			"multiple": false,
+			"required": false,
+			"allowedTypes": ["images"]
+		},
+		"website": {
+			"type": "string"
+		},
+		"founded_year": {
+			"type": "integer",
+			"min": 1800,
+			"max": 2030
+		},
+		"games": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::game.game",
+			"mappedBy": "publishers"
+		}
+	}
+}
